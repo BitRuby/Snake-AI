@@ -1,0 +1,7 @@
+{
+  "pixelSize": 60,
+  "gameSpeed": 100,
+  "backgroundColor": "#636e72",
+  "snakeColor": "#fff",
+  "borderColor": "#2d3436"
+}
