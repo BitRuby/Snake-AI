@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "babel src -d lib",
-    "webpack": "webpack --watch"
+    "build-server": "babel server/src -d server/build && node server/build/index.js",
+    "build-client": "webpack-dev-server --watch"
   },
   "author": "",
   "license": "ISC",
@@ -16,6 +16,10 @@
     "@babel/preset-env": "^7.8.7",
     "babel-loader": "^8.0.6",
     "webpack": "^4.42.0",
-    "webpack-cli": "^3.3.11"
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3"
+  },
+  "dependencies": {
+    "ws": "^7.2.3"
   }
 }

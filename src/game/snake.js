@@ -13,6 +13,7 @@ class Snake {
     this.columns = c.width / this.px;
     this.ctx = c.getContext("2d");
     this.food = new Food(this);
+    this.steps = 0;
   }
   isDie = () => {
     return this.die;
@@ -51,6 +52,7 @@ class Snake {
     }
     ctx.fillStyle = data.snakeColor;
     ctx.strokeStyle = data.backgroundColor;
+    this.steps++;
     snake.map(e => {
       ctx.fillRect(e.x, e.y, px, px);
       ctx.strokeRect(e.x, e.y, px, px);
@@ -63,7 +65,7 @@ class Snake {
     ) {
       this.food = new Food(this);
       this.points += 1;
-      console.log(this.points);
+      console.log(this.points, this.steps);
       return true;
     } else return false;
   };

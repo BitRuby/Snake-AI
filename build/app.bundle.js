@@ -284,6 +284,7 @@ var Snake = function Snake(c) {
 
     ctx.fillStyle = _game_config_json__WEBPACK_IMPORTED_MODULE_0__.snakeColor;
     ctx.strokeStyle = _game_config_json__WEBPACK_IMPORTED_MODULE_0__.backgroundColor;
+    _this.steps++;
     snake.map(function (e) {
       ctx.fillRect(e.x, e.y, px, px);
       ctx.strokeRect(e.x, e.y, px, px);
@@ -294,7 +295,7 @@ var Snake = function Snake(c) {
     if (_this.food.getPosition().x === _this.snake[0].x && _this.food.getPosition().y === _this.snake[0].y) {
       _this.food = new _food_js__WEBPACK_IMPORTED_MODULE_1__["default"](_this);
       _this.points += 1;
-      console.log(_this.points);
+      console.log(_this.points, _this.steps);
       return true;
     } else return false;
   });
@@ -372,6 +373,7 @@ var Snake = function Snake(c) {
   this.columns = c.width / this.px;
   this.ctx = c.getContext("2d");
   this.food = new _food_js__WEBPACK_IMPORTED_MODULE_1__["default"](this);
+  this.steps = 0;
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (Snake);
