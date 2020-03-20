@@ -5,7 +5,7 @@ var Individual = /** @class */ (function () {
     function Individual(chromosome_length) {
         var low = config_constants_1.NETWORK.RANDOM_WEIGHTS_LOWER_BOUNDS;
         var high = config_constants_1.NETWORK.RANDOM_WEIGHTS_UPPER_BOUNDS;
-        this.chromosome = new Array(chromosome_length).fill(Math.random() * (high - low) + low);
+        this.chromosome = Array.from({ length: chromosome_length }, function () { return Math.random() * (high - low) + low; });
         this.fitness = 0;
     }
     Individual.prototype.getFitness = function () {

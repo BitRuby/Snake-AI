@@ -6,7 +6,7 @@ export default class Individual {
     constructor(chromosome_length: number) {
         var low = NETWORK.RANDOM_WEIGHTS_LOWER_BOUNDS;
         var high = NETWORK.RANDOM_WEIGHTS_UPPER_BOUNDS;
-        this.chromosome = new Array(chromosome_length).fill(Math.random() * (high - low) + low);
+        this.chromosome = Array.from({length: chromosome_length}, () => Math.random() * (high - low) + low);
         this.fitness = 0;
     }
     getFitness(): number {
