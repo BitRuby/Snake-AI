@@ -1,5 +1,5 @@
 import Snake from "./snake";
-import data from "../game.config.json";
+import data from "../config.json";
 
 class Game {
   constructor(c) {

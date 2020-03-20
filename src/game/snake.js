@@ -1,4 +1,4 @@
-import data from "../game.config.json";
+import data from "../config.json";
 import Food from "./food.js";
 
 class Snake {

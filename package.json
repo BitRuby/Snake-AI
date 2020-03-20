@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build-server": "babel server/src -d server/build && node server/build/index.js",
+    "build-server": "tsc server/src/index.ts && node server/build/index.js",
     "build-client": "webpack-dev-server --watch"
   },
   "author": "",
@@ -20,6 +20,7 @@
     "webpack-dev-server": "^3.10.3"
   },
   "dependencies": {
+    "typescript": "^3.8.3",
     "ws": "^7.2.3"
   }
 }
