@@ -18,5 +18,5 @@ const uniform_mutation = (chromosome: Array<number>): Array<number> => {
     var randomGene = chromosome[Math.floor(Math.random() * max) + min];
     var randomIndex = Math.floor(Math.random() * (chromosome.length - 1));
     chromosome[randomIndex] = randomGene;
-    return chromosome;
+    return [...chromosome];
 };

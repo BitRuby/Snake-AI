@@ -15,4 +15,7 @@ export default class Individual {
     getChromosome(): Array<number> {
         return this.chromosome;
     }
+    setChromosome(chromosome: Array<number>): void {
+        this.chromosome = chromosome;
+    }
 }

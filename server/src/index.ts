@@ -7,3 +7,5 @@ import Population from "./genetic_algorithm/population";
 
 const pop = new Population(50);
 pop.geneticOperators();
+
+console.log("haha");

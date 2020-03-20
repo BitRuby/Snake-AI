@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build-server": "tsc server/src/index.ts && node server/build/index.js",
+    "build-server": "tsc ./server/src/index.ts --outDir ./server/build && node ./server/build/index.js",
     "build-client": "webpack-dev-server --watch"
   },
   "author": "",
