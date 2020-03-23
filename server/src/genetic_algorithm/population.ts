@@ -14,13 +14,16 @@ export default class Population {
             console.table(i.getChromosome());
         })
     }
+    getPopulation = (): Array<Individual> => {
+        return this.population;
+    }
     geneticOperators = () => {
         this.population = selection(this.population);
-        // for (let i = 0; i < this.population.length; i++) {
-        //     const offspring = crossover(this.population[i].getChromosome(), this.population[(i + 1) % this.population.length].getChromosome());
-        //     this.population[i].setChromosome(offspring[0]);
-        //     this.population[(i + 1) % this.population.length].setChromosome(offspring[1]);
-        // }
-        // this.population.map(i => i.setChromosome(mutation(i.getChromosome())));
+        for (let i = 0; i < this.population.length; i += 2) {
+            const offspring = crossover(this.population[i].getChromosome(), this.population[(i + 1) % this.population.length].getChromosome());
+            this.population[i].setChromosome(offspring[0]);
+            this.population[(i + 1) % this.population.length].setChromosome(offspring[1]);
+        }
+        this.population.map(i => i.setChromosome(mutation(i.getChromosome())));
     }
 }

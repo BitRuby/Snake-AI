@@ -14,9 +14,9 @@ const uniform_mutation = (chromosome: Array<number>): Array<number> => {
     var lower = ALGORITHM.MUTATION_UNIFORM_LOWER_BOUNDS;
     var upper = ALGORITHM.MUTATION_UNIFORM_UPPER_BOUNDS;
     var min = Math.floor(lower * (chromosome.length - 1));
-    var max = Math.floor(upper * (chromosome.length - 1));
+    var max = Math.floor(upper * (chromosome.length - 1)) + 0.99;
     var randomGene = chromosome[Math.floor(Math.random() * max) + min];
-    var randomIndex = Math.floor(Math.random() * (chromosome.length - 1));
+    var randomIndex = Math.floor(Math.random() * (chromosome.length - 0.01));
     chromosome[randomIndex] = randomGene;
     return [...chromosome];
 };

@@ -1,9 +1,9 @@
 "use strict";
 exports.__esModule = true;
 exports.ALGORITHM = {
-    POPULATION_SIZE: 500,
+    POPULATION_SIZE: 4,
     SELECTION_TYPE: "tournament",
-    TOURNAMENT_SIZE: 2,
+    TOURNAMENT_SIZE: 4,
     CROSSOVER_TYPE: "uniform_binary",
     CROSSOVER_PROPABILITY: 1,
     MUTATION_TYPE: "uniform_mutation",

@@ -5,10 +5,14 @@ import Population from "./genetic_algorithm/population";
 
 // console.log(ws);
 
-const pop = new Population(64);
-pop.printChromosomes();
-pop.geneticOperators();
-console.log("////////////////");
-pop.printChromosomes();
+//Receive width/height 10x10
 
-console.log("haha");
+
+const pop = new Population(4);
+for (var i = 0; i < 10; i++) {
+    pop.printChromosomes();
+    pop.geneticOperators();
+    console.log("////////////////");
+    pop.printChromosomes();
+    console.log("haha");
+}
