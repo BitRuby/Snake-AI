@@ -1,14 +1,16 @@
 "use strict";
 exports.__esModule = true;
-// import WebSocket from "ws";
-var population_1 = require("./genetic_algorithm/population");
+var network_1 = require("./network");
 // const ws = new WebSocket.Server({ port: 8080 });
 // console.log(ws);
-var pop = new population_1["default"](4);
-for (var i = 0; i < 10; i++) {
-    pop.printChromosomes();
-    pop.geneticOperators();
-    console.log("////////////////");
-    pop.printChromosomes();
-    console.log("haha");
-}
+//Receive width/height 10x10
+// const pop = new Population(4);
+// for (var i = 0; i < 10; i++) {
+//     pop.printChromosomes();
+//     pop.geneticOperators();
+//     console.log("////////////////");
+//     pop.printChromosomes();
+//     console.log("haha");
+// }
+var net = new network_1["default"]({ width: 10, height: 10 });
+net.test();

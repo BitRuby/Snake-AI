@@ -13,6 +13,9 @@ var Population = /** @class */ (function () {
                 console.table(i.getChromosome());
             });
         };
+        this.getPopulation = function () {
+            return _this.population;
+        };
         this.geneticOperators = function () {
             _this.population = selection_1.selection(_this.population);
             for (var i = 0; i < _this.population.length; i += 2) {

@@ -1,29 +1,8 @@
 import Population from "./genetic_algorithm/population";
 import Individual from "./genetic_algorithm/individual";
+import { MovementRegister, CurrentMovement, MapSettings, Position, Direction, Binary } from "./types";
+import { checkPosTopRight, checkPosBottomRight, checkPosBottomLeft, checkPosTopLeft } from "./utilis";
 
-interface MapSettings {
-    width: number;
-    height: number;
-}
-interface Position {
-    x: number;
-    y: number;
-}
-interface Sequence {
-    snakePos: Position;
-    applePos: Position;
-    points: number;
-}
-interface MovementRegister {
-    motion: Array<Sequence>;
-    id: number;
-}
-interface CurrentMovement {
-    snakePos: Array<Position>;
-    applePos: Position;
-    headDirection: string;
-    tailDirection: string;
-}
 
 export default class Network {
     private dead: boolean;
@@ -39,8 +18,69 @@ export default class Network {
         this.mapSettings = mapSettings;
     }
 
-    encodeNetworkInputs = () => {
-
+    encodeNetworkInputs = (): Array<number> => {
+        const snake: Position = { x: this.currentMovement.snakePos[0].x, y: this.currentMovement.snakePos[0].y };
+        const apple: Position = { x: this.currentMovement.applePos.x, y: this.currentMovement.applePos.y };
+        const snakePos: Array<Position> = this.currentMovement.snakePos;
+        const size: MapSettings = this.mapSettings;
+        const distanceToWalls: Array<number> = new Array<number>();
+        const isThereApple: Array<Binary> = new Array<Binary>();
+        const isPartOfSnake: Array<Binary> = new Array<Binary>();
+        let headDirection: Array<Binary> = new Array<Binary>();
+        let tailDirection: Array<Binary> = new Array<Binary>();
+        distanceToWalls.push(snake.y);
+        distanceToWalls.push((snake.y < ((size.width - 1) - snake.x)) ? (snake.y * Math.pow(2, 0.5)) : ((size.width - 1) - snake.x) * Math.pow(2, 0.5));
+        distanceToWalls.push((size.width - 1) - snake.x);
+        distanceToWalls.push((((size.width - 1) - snake.x) < ((size.height - 1) - snake.y)) ? (((size.width - 1) - snake.x) * Math.pow(2, 0.5)) : (((size.height - 1) - snake.y) * Math.pow(2, 0.5)));
+        distanceToWalls.push((size.height - 1) - snake.y);
+        distanceToWalls.push((snake.x < ((size.height - 1) - snake.y)) ? (snake.x * Math.pow(2, 0.5)) : ((size.height - 1) - snake.y) * Math.pow(2, 0.5));
+        distanceToWalls.push(snake.x);
+        distanceToWalls.push(snake.x < snake.y ? (snake.x * Math.pow(snake.x, 0.5)) : (snake.y * Math.pow(2, 0.5)));
+        isThereApple.push(((apple.x === snake.x) && (apple.y < snake.y)) ? 1 : 0);
+        isThereApple.push(checkPosTopRight(snake, apple, size.height - 1));
+        isThereApple.push(((apple.x > snake.x) && (apple.y === snake.y)) ? 1 : 0);
+        isThereApple.push(checkPosBottomRight(snake, apple, size.height - 1));
+        isThereApple.push(((apple.x === snake.x) && (apple.y > snake.y)) ? 1 : 0);
+        isThereApple.push(checkPosBottomLeft(snake, apple, size.height - 1));
+        isThereApple.push(((apple.x < snake.x) && (apple.y === snake.y)) ? 1 : 0);
+        isThereApple.push(checkPosTopLeft(snake, apple, size.height - 1));
+        isPartOfSnake.push(snakePos.some(e => e.x === snake.x && e.y < snake.y) ? 1 : 0);
+        isPartOfSnake.push(snakePos.some(e => checkPosTopRight(snake, e, size.height - 1) === 1 ? true : false) ? 1 : 0);
+        isPartOfSnake.push(snakePos.some(e => e.x > snake.x && e.y === snake.y) ? 1 : 0);
+        isPartOfSnake.push(snakePos.some(e => checkPosBottomRight(snake, e, size.height - 1) === 1 ? true : false) ? 1 : 0);
+        isPartOfSnake.push(snakePos.some(e => e.x === snake.x && e.y > snake.y) ? 1 : 0);
+        isPartOfSnake.push(snakePos.some(e => checkPosBottomLeft(snake, e, size.height - 1) === 1 ? true : false) ? 1 : 0);
+        isPartOfSnake.push(snakePos.some(e => e.x < snake.x && e.y === snake.y) ? 1 : 0);
+        isPartOfSnake.push(snakePos.some(e => checkPosTopLeft(snake, e, size.height - 1) === 1 ? true : false) ? 1 : 0);
+        switch (this.currentMovement.headDirection) {
+            case 'top':
+                headDirection = [1, 0, 0, 0];
+                break;
+            case 'right':
+                headDirection = [0, 1, 0, 0];
+                break;
+            case 'bottom':
+                headDirection = [0, 0, 1, 0];
+                break;
+            case 'left':
+                headDirection = [0, 0, 0, 1];
+                break;
+        }
+        switch (this.currentMovement.tailDirection) {
+            case 'top':
+                tailDirection = [1, 0, 0, 0];
+                break;
+            case 'right':
+                tailDirection = [0, 1, 0, 0];
+                break;
+            case 'bottom':
+                tailDirection = [0, 0, 1, 0];
+                break;
+            case 'left':
+                tailDirection = [0, 0, 0, 1];
+                break;
+        }
+        return [...distanceToWalls, ...isThereApple, ...isPartOfSnake, ...headDirection, ...tailDirection];
     }
 
     calculateNetwork = (weights: Array<number>) => {
@@ -48,27 +88,29 @@ export default class Network {
     }
 
     updateSnakePosition = () => {
-        
+
     }
 
     randomApple = (initial: boolean = false): Position => {
         let randomApple: Position;
-        for (; ;) {
-            randomApple = {
-                x:
-                    (Math.floor(Math.random() * this.mapSettings.width + 0.99)),
-                y:
-                    (Math.floor(Math.random() * this.mapSettings.height + 0.99))
-            };
-            if (
-                !this.currentMovement.snakePos.some(e => e.x === randomApple.x && e.y === randomApple.y)
-            ) {
-                break;
-            }
-            if (initial && (randomApple.x === 0 && randomApple.y === 0)) {
-                continue;
-            }
-        }
+        this.currentMovement.snakePos = new Array<Position>();
+        // for (; ;) {
+        //     randomApple = {
+        //         x:
+        //             (Math.floor(Math.random() * this.mapSettings.width + 0.99)),
+        //         y:
+        //             (Math.floor(Math.random() * this.mapSettings.height + 0.99))
+        //     };
+        //     if (
+        //         !this.currentMovement.snakePos.some((e: Position) => e.x === randomApple.x && e.y === randomApple.y)
+        //     ) {
+        //         break;
+        //     }
+        //     if (initial && (randomApple.x === 0 && randomApple.y === 0)) {
+        //         continue;
+        //     }
+        // }
+        randomApple = { x: 0, y: 2 };
         return randomApple;
     }
 
@@ -85,7 +127,7 @@ export default class Network {
             }]
         }
         this.currentMovement = {
-            snakePos: [{ x: 0, y: 0 }],
+            snakePos: [{ x: 1, y: 1 }, { x: 0, y: 1 }, { x: 0, y: 0 }, { x: 1, y: 0 }, { x: 2, y: 0 }  ],
             applePos: applePos,
             headDirection: 'right',
             tailDirection: 'left'
@@ -119,5 +161,11 @@ export default class Network {
             this.clear();
         });
         this.population.geneticOperators();
+    }
+
+    test = () => {
+        this.initializeSnakePosition();
+        const arr = this.encodeNetworkInputs();
+        console.table(arr);
     }
 }

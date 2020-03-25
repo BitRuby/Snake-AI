@@ -31,3 +31,51 @@ function compare(a, b) {
         return 0;
 }
 exports.compare = compare;
+exports.checkPosTopRight = function (a, b, length) {
+    for (var i = 1;; i++) {
+        if ((a.x + i === b.x) && (a.y - i === b.y)) {
+            return 1;
+        }
+        else {
+            if (((a.x + i) >= length) || ((a.y - i) <= 0)) {
+                return 0;
+            }
+        }
+    }
+};
+exports.checkPosBottomRight = function (a, b, length) {
+    for (var i = 1;; i++) {
+        if ((a.x + i === b.x) && (a.y + i === b.y)) {
+            return 1;
+        }
+        else {
+            if (((a.x + i) >= length) || ((a.y + i) >= length)) {
+                return 0;
+            }
+        }
+    }
+};
+exports.checkPosBottomLeft = function (a, b, length) {
+    for (var i = 1;; i++) {
+        if ((a.x - i === b.x) && (a.y + i === b.y)) {
+            return 1;
+        }
+        else {
+            if (((a.x - i) <= 0) || ((a.y + i) >= length)) {
+                return 0;
+            }
+        }
+    }
+};
+exports.checkPosTopLeft = function (a, b, length) {
+    for (var i = 1;; i++) {
+        if ((a.x - i === b.x) && (a.y - i === b.y)) {
+            return 1;
+        }
+        else {
+            if (((a.x - i) <= 0) || ((a.y - i) <= 0)) {
+                return 0;
+            }
+        }
+    }
+};

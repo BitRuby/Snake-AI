@@ -1,4 +1,5 @@
 import Individual from "./genetic_algorithm/individual";
+import { Binary, Position } from "./types";
 
 export function copy(o: any): any {
   var output: any, v, key;
@@ -26,4 +27,52 @@ export function compare(a: Individual, b: Individual): number {
   if (a.getFitness() < b.getFitness()) return 1;
   else if (a.getFitness() > b.getFitness()) return -1;
   else return 0;
+}
+export const checkPosTopRight = (a: Position, b: Position, length: number): Binary => {
+  for (let i = 1; ; i++) {
+    if ((a.x + i === b.x) && (a.y - i === b.y)) {
+      return 1;
+    }
+    else {
+      if (((a.x + i) >= length) || ((a.y - i) <= 0)) {
+        return 0;
+      }
+    }
+  }
+}
+export const checkPosBottomRight = (a: Position, b: Position, length: number): Binary => {
+  for (let i = 1; ; i++) {
+    if ((a.x + i === b.x) && (a.y + i === b.y)) {
+      return 1;
+    }
+    else {
+      if (((a.x + i) >= length) || ((a.y + i) >= length)) {
+        return 0;
+      }
+    }
+  }
+}
+export const checkPosBottomLeft = (a: Position, b: Position, length: number): Binary => {
+  for (let i = 1; ; i++) {
+    if ((a.x - i === b.x) && (a.y + i === b.y)) {
+      return 1;
+    }
+    else {
+      if (((a.x - i) <= 0) || ((a.y + i) >= length)) {
+        return 0;
+      }
+    }
+  }
+}
+export const checkPosTopLeft = (a: Position, b: Position, length: number): Binary => {
+  for (let i = 1; ; i++) {
+    if ((a.x - i === b.x) && (a.y - i === b.y)) {
+      return 1;
+    }
+    else {
+      if (((a.x - i) <= 0) || ((a.y - i) <= 0)) {
+        return 0;
+      }
+    }
+  }
 }
