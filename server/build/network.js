@@ -9,6 +9,7 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
 exports.__esModule = true;
 var population_1 = require("./genetic_algorithm/population");
 var utilis_1 = require("./utilis");
+var mathjs_1 = require("mathjs");
 var Network = /** @class */ (function () {
     function Network(mapSettings) {
         var _this = this;
@@ -77,6 +78,19 @@ var Network = /** @class */ (function () {
             return __spreadArrays(distanceToWalls, isThereApple, isPartOfSnake, headDirection, tailDirection);
         };
         this.calculateNetwork = function (weights) {
+            var weight = [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5];
+            var layers = new Array();
+            layers[0] = [0.5, 0.25, 0.75, 1];
+            var ar = [4, 3, 2];
+            var acc = 0;
+            for (var i = 1; i < ar.length; i++) {
+                layers[i] = [];
+                for (var j = 0; j < ar[i]; j++) {
+                    layers[i].push(mathjs_1.multiply(layers[i - 1], weight.slice(acc, acc + ar[i - 1])));
+                    acc += ar[i - 1];
+                }
+            }
+            console.table(layers);
         };
         this.updateSnakePosition = function () {
         };
@@ -84,23 +98,18 @@ var Network = /** @class */ (function () {
             if (initial === void 0) { initial = false; }
             var randomApple;
             _this.currentMovement.snakePos = new Array();
-            // for (; ;) {
-            //     randomApple = {
-            //         x:
-            //             (Math.floor(Math.random() * this.mapSettings.width + 0.99)),
-            //         y:
-            //             (Math.floor(Math.random() * this.mapSettings.height + 0.99))
-            //     };
-            //     if (
-            //         !this.currentMovement.snakePos.some((e: Position) => e.x === randomApple.x && e.y === randomApple.y)
-            //     ) {
-            //         break;
-            //     }
-            //     if (initial && (randomApple.x === 0 && randomApple.y === 0)) {
-            //         continue;
-            //     }
-            // }
-            randomApple = { x: 0, y: 2 };
+            for (;;) {
+                randomApple = {
+                    x: (Math.floor(Math.random() * _this.mapSettings.width + 0.99)),
+                    y: (Math.floor(Math.random() * _this.mapSettings.height + 0.99))
+                };
+                if (!_this.currentMovement.snakePos.some(function (e) { return e.x === randomApple.x && e.y === randomApple.y; })) {
+                    break;
+                }
+                if (initial && (randomApple.x === 0 && randomApple.y === 0)) {
+                    continue;
+                }
+            }
             return randomApple;
         };
         this.initializeSnakePosition = function () {
@@ -116,7 +125,7 @@ var Network = /** @class */ (function () {
                     }]
             };
             _this.currentMovement = {
-                snakePos: [{ x: 1, y: 1 }, { x: 0, y: 1 }, { x: 0, y: 0 }, { x: 1, y: 0 }, { x: 2, y: 0 }],
+                snakePos: [{ x: 0, y: 0 }],
                 applePos: applePos,
                 headDirection: 'right',
                 tailDirection: 'left'
@@ -147,9 +156,7 @@ var Network = /** @class */ (function () {
             _this.population.geneticOperators();
         };
         this.test = function () {
-            _this.initializeSnakePosition();
-            var arr = _this.encodeNetworkInputs();
-            console.table(arr);
+            _this.calculateNetwork([]);
         };
         this.population = new population_1["default"](4);
         this.dead = false;

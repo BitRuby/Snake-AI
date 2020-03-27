@@ -1,8 +1,9 @@
 import Population from "./genetic_algorithm/population";
 import Individual from "./genetic_algorithm/individual";
-import { MovementRegister, CurrentMovement, MapSettings, Position, Direction, Binary } from "./types";
+import { MovementRegister, CurrentMovement, MapSettings, Position, Binary } from "./types";
 import { checkPosTopRight, checkPosBottomRight, checkPosBottomLeft, checkPosTopLeft } from "./utilis";
-
+import { NETWORK } from "./config.constants";
+import { multiply } from 'mathjs';
 
 export default class Network {
     private dead: boolean;
@@ -84,7 +85,17 @@ export default class Network {
     }
 
     calculateNetwork = (weights: Array<number>) => {
-
+        let layers = new Array<Array<any>>();
+        layers[0] = this.encodeNetworkInputs();
+        const ar: Array<number> = NETWORK.NN_ARCHITECTURE;
+        let acc = 0;
+        for (let i = 1; i < ar.length; i++) {
+            layers[i] = [];
+            for (let j = 0; j < ar[i]; j++) {
+                layers[i].push(multiply(layers[i - 1], weights.slice(acc, acc + ar[i - 1])));
+                acc += ar[i - 1];
+            }
+        }
     }
 
     updateSnakePosition = () => {
@@ -94,23 +105,22 @@ export default class Network {
     randomApple = (initial: boolean = false): Position => {
         let randomApple: Position;
         this.currentMovement.snakePos = new Array<Position>();
-        // for (; ;) {
-        //     randomApple = {
-        //         x:
-        //             (Math.floor(Math.random() * this.mapSettings.width + 0.99)),
-        //         y:
-        //             (Math.floor(Math.random() * this.mapSettings.height + 0.99))
-        //     };
-        //     if (
-        //         !this.currentMovement.snakePos.some((e: Position) => e.x === randomApple.x && e.y === randomApple.y)
-        //     ) {
-        //         break;
-        //     }
-        //     if (initial && (randomApple.x === 0 && randomApple.y === 0)) {
-        //         continue;
-        //     }
-        // }
-        randomApple = { x: 0, y: 2 };
+        for (; ;) {
+            randomApple = {
+                x:
+                    (Math.floor(Math.random() * this.mapSettings.width + 0.99)),
+                y:
+                    (Math.floor(Math.random() * this.mapSettings.height + 0.99))
+            };
+            if (
+                !this.currentMovement.snakePos.some((e: Position) => e.x === randomApple.x && e.y === randomApple.y)
+            ) {
+                break;
+            }
+            if (initial && (randomApple.x === 0 && randomApple.y === 0)) {
+                continue;
+            }
+        }
         return randomApple;
     }
 
@@ -127,7 +137,7 @@ export default class Network {
             }]
         }
         this.currentMovement = {
-            snakePos: [{ x: 1, y: 1 }, { x: 0, y: 1 }, { x: 0, y: 0 }, { x: 1, y: 0 }, { x: 2, y: 0 }  ],
+            snakePos: [{ x: 0, y: 0 }],
             applePos: applePos,
             headDirection: 'right',
             tailDirection: 'left'
@@ -164,8 +174,6 @@ export default class Network {
     }
 
     test = () => {
-        this.initializeSnakePosition();
-        const arr = this.encodeNetworkInputs();
-        console.table(arr);
+        this.calculateNetwork([]);
     }
 }
