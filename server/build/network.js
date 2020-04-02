@@ -15,7 +15,6 @@ var Network = /** @class */ (function () {
     function Network(mapSettings) {
         var _this = this;
         this.NN = config_constants_1.NETWORK.NN_ARCHITECTURE;
-        this.snakeApple = 1;
         this.calculateChromosomeLength = function (NN) {
             var cc = 0;
             for (var i = 0; i < NN.length - 1; i++) {
@@ -106,9 +105,9 @@ var Network = /** @class */ (function () {
             switch (direction) {
                 case 0:
                     if (!_this.isCollideWithBody({ x: x, y: y - 1 }) && !_this.isCollideWithWalls({ x: x, y: y - 1 }) && _this.currentMovement.health > 0) {
-                        _this.currentMovement.snakePos.unshift({ x: x, y: y - 1 });
                         _this.currentMovement.headDirection = 'top';
-                        _this.currentMovement.tailDirection = _this.calculateTailDirection({ x: x, y: y - 1 });
+                        _this.currentMovement.tailDirection = _this.calculateTailDirection(0, -1);
+                        _this.currentMovement.snakePos.unshift({ x: x, y: y - 1 });
                         if (_this.isCollideWithApple({ x: x, y: y - 1 })) {
                             _this.currentMovement.points += 1;
                             _this.currentMovement.health = 100;
@@ -127,9 +126,9 @@ var Network = /** @class */ (function () {
                     break;
                 case 1:
                     if (!_this.isCollideWithBody({ x: x + 1, y: y }) && !_this.isCollideWithWalls({ x: x + 1, y: y }) && _this.currentMovement.health > 0) {
-                        _this.currentMovement.snakePos.unshift({ x: x + 1, y: y });
                         _this.currentMovement.headDirection = 'right';
-                        _this.currentMovement.tailDirection = _this.calculateTailDirection({ x: x + 1, y: y });
+                        _this.currentMovement.tailDirection = _this.calculateTailDirection(1, 0);
+                        _this.currentMovement.snakePos.unshift({ x: x + 1, y: y });
                         if (_this.isCollideWithApple({ x: x + 1, y: y })) {
                             _this.currentMovement.points += 1;
                             _this.currentMovement.health = 100;
@@ -148,9 +147,9 @@ var Network = /** @class */ (function () {
                     break;
                 case 2:
                     if (!_this.isCollideWithBody({ x: x, y: y + 1 }) && !_this.isCollideWithWalls({ x: x, y: y + 1 }) && _this.currentMovement.health > 0) {
-                        _this.currentMovement.snakePos.unshift({ x: x, y: y + 1 });
                         _this.currentMovement.headDirection = 'bottom';
-                        _this.currentMovement.tailDirection = _this.calculateTailDirection({ x: x, y: y + 1 });
+                        _this.currentMovement.tailDirection = _this.calculateTailDirection(0, 1);
+                        _this.currentMovement.snakePos.unshift({ x: x, y: y + 1 });
                         if (_this.isCollideWithApple({ x: x, y: y + 1 })) {
                             _this.currentMovement.points += 1;
                             _this.currentMovement.health = 100;
@@ -169,9 +168,9 @@ var Network = /** @class */ (function () {
                     break;
                 case 3:
                     if (!_this.isCollideWithBody({ x: x - 1, y: y }) && !_this.isCollideWithWalls({ x: x - 1, y: y }) && _this.currentMovement.health > 0) {
-                        _this.currentMovement.snakePos.unshift({ x: x - 1, y: y });
                         _this.currentMovement.headDirection = 'left';
-                        _this.currentMovement.tailDirection = _this.calculateTailDirection({ x: x - 1, y: y });
+                        _this.currentMovement.tailDirection = _this.calculateTailDirection(-1, 0);
+                        _this.currentMovement.snakePos.unshift({ x: x - 1, y: y });
                         if (_this.isCollideWithApple({ x: x - 1, y: y })) {
                             _this.currentMovement.points += 1;
                             _this.currentMovement.health = 100;
@@ -192,30 +191,32 @@ var Network = /** @class */ (function () {
                     break;
             }
         };
-        this.calculateTailDirection = function (pos) {
-            var _a = _this.currentMovement.snakePos[_this.currentMovement.snakePos.length - 1], x1 = _a.x, y1 = _a.y;
-            var _b = _this.currentMovement.snakePos[_this.currentMovement.snakePos.length - 2], x2 = _b.x, y2 = _b.y;
+        this.calculateTailDirection = function (newX, newY) {
             var retVal = 'top';
             if (_this.currentMovement.snakePos.length === 1) {
-                if (pos.x > x1)
+                var _a = _this.currentMovement.snakePos[_this.currentMovement.snakePos.length - 1], x1 = _a.x, y1 = _a.y;
+                if (x1 + newX > x1)
                     retVal = 'left';
-                else if (pos.x < x1)
+                else if (x1 + newX < x1)
                     retVal = 'right';
-                else if (pos.y > y1)
+                else if (y1 + newY > y1)
                     retVal = 'bottom';
-                else if (pos.y < y2)
+                else if (y1 + newY < y1)
                     retVal = 'top';
             }
-            else {
-                if (pos.x > x2)
+            else if (_this.currentMovement.snakePos.length >= 2) {
+                var _b = _this.currentMovement.snakePos[_this.currentMovement.snakePos.length - 2], x2 = _b.x, y2 = _b.y;
+                if (x2 + newX > x2)
                     retVal = 'left';
-                else if (pos.x < x2)
+                else if (x2 + newX < x2)
                     retVal = 'right';
-                else if (pos.y > y2)
+                else if (y2 + newY > y2)
                     retVal = 'bottom';
-                else if (pos.y < y2)
+                else if (y2 + newY < y2)
                     retVal = 'top';
             }
+            else
+                console.log("WTF?: " + _this.currentMovement.snakePos.length);
             return retVal;
         };
         this.isCollideWithBody = function (pos) {

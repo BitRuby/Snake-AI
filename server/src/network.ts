@@ -13,7 +13,6 @@ export default class Network {
     private currentMovement: CurrentMovement;
     private mapSettings: MapSettings;
     private NN: Array<number> = NETWORK.NN_ARCHITECTURE;
-    private snakeApple: number = 1;
     constructor(mapSettings: MapSettings) {
         this.population = new Population(this.calculateChromosomeLength(this.NN));
         this.dead = false;
@@ -115,9 +114,9 @@ export default class Network {
         switch (direction) {
             case 0:
                 if (!this.isCollideWithBody({ x, y: y - 1 }) && !this.isCollideWithWalls({ x, y: y - 1 }) && this.currentMovement.health > 0) {
-                    this.currentMovement.snakePos.unshift({ x, y: y - 1 });
                     this.currentMovement.headDirection = 'top';
-                    this.currentMovement.tailDirection = this.calculateTailDirection({ x, y: y - 1 });
+                    this.currentMovement.tailDirection = this.calculateTailDirection(0, -1);
+                    this.currentMovement.snakePos.unshift({ x, y: y - 1 });
                     if (this.isCollideWithApple({ x, y: y - 1 })) {
                         this.currentMovement.points += 1;
                         this.currentMovement.health = 100;
@@ -136,9 +135,9 @@ export default class Network {
                 break;
             case 1:
                 if (!this.isCollideWithBody({ x: x + 1, y }) && !this.isCollideWithWalls({ x: x + 1, y }) && this.currentMovement.health > 0) {
-                    this.currentMovement.snakePos.unshift({ x: x + 1, y });
                     this.currentMovement.headDirection = 'right';
-                    this.currentMovement.tailDirection = this.calculateTailDirection({ x: x + 1, y });
+                    this.currentMovement.tailDirection = this.calculateTailDirection(1, 0);
+                    this.currentMovement.snakePos.unshift({ x: x + 1, y });
                     if (this.isCollideWithApple({ x: x + 1, y })) {
                         this.currentMovement.points += 1;
                         this.currentMovement.health = 100;
@@ -156,9 +155,9 @@ export default class Network {
                 break;
             case 2:
                 if (!this.isCollideWithBody({ x, y: y + 1 }) && !this.isCollideWithWalls({ x, y: y + 1 }) && this.currentMovement.health > 0) {
-                    this.currentMovement.snakePos.unshift({ x, y: y + 1 });
                     this.currentMovement.headDirection = 'bottom';
-                    this.currentMovement.tailDirection = this.calculateTailDirection({ x, y: y + 1 });
+                    this.currentMovement.tailDirection = this.calculateTailDirection(0, 1);
+                    this.currentMovement.snakePos.unshift({ x, y: y + 1 });
                     if (this.isCollideWithApple({ x, y: y + 1 })) {
                         this.currentMovement.points += 1;
                         this.currentMovement.health = 100;
@@ -175,9 +174,9 @@ export default class Network {
                 break;
             case 3:
                 if (!this.isCollideWithBody({ x: x - 1, y }) && !this.isCollideWithWalls({ x: x - 1, y }) && this.currentMovement.health > 0) {
-                    this.currentMovement.snakePos.unshift({ x: x - 1, y });
                     this.currentMovement.headDirection = 'left';
-                    this.currentMovement.tailDirection = this.calculateTailDirection({ x: x - 1, y });
+                    this.currentMovement.tailDirection = this.calculateTailDirection(-1, 0);
+                    this.currentMovement.snakePos.unshift({ x: x - 1, y });
                     if (this.isCollideWithApple({ x: x - 1, y })) {
                         this.currentMovement.points += 1;
                         this.currentMovement.health = 100;
@@ -197,20 +196,20 @@ export default class Network {
         }
     }
 
-    private calculateTailDirection = (pos: Position): Direction => {
-        const { x: x1, y: y1 } = this.currentMovement.snakePos[this.currentMovement.snakePos.length - 1];
-        const { x: x2, y: y2 } = this.currentMovement.snakePos[this.currentMovement.snakePos.length - 2];
+    private calculateTailDirection = (newX: number, newY: number): Direction => {
         let retVal: Direction = 'top';
-        if (this.currentMovement.snakePos.length === 1) {
-            if (pos.x > x1) retVal = 'left';
-            else if (pos.x < x1) retVal = 'right';
-            else if (pos.y > y1) retVal = 'bottom';
-            else if (pos.y < y2) retVal = 'top';
-        } else {
-            if (pos.x > x2) retVal = 'left';
-            else if (pos.x < x2) retVal = 'right';
-            else if (pos.y > y2) retVal = 'bottom';
-            else if (pos.y < y2) retVal = 'top';
+        if (this.currentMovement.snakePos.length <= 1) {
+            const { x: x1, y: y1 } = this.currentMovement.snakePos[this.currentMovement.snakePos.length - 1];
+            if (x1 + newX > x1) retVal = 'left';
+            else if (x1 + newX < x1) retVal = 'right';
+            else if (y1 + newY > y1) retVal = 'bottom';
+            else if (y1 + newY < y1) retVal = 'top';
+        } else if (this.currentMovement.snakePos.length >= 2) {
+            const { x: x2, y: y2 } = this.currentMovement.snakePos[this.currentMovement.snakePos.length - 2];
+            if (x2 + newX > x2) retVal = 'left';
+            else if (x2 + newX < x2) retVal = 'right';
+            else if (y2 + newY > y2) retVal = 'bottom';
+            else if (y2 + newY < y2) retVal = 'top';
         }
         return retVal;
     }

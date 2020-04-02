@@ -18,13 +18,15 @@ exports.crossover = function (p1, p2) {
 };
 var uniform_binary_crossover = function (p1, p2) {
     var _a;
-    var length = p1.length;
-    if (p1.length === p2.length) {
+    var newP1 = __spreadArrays(p1);
+    var newP2 = __spreadArrays(p2);
+    var length = newP1.length;
+    if (newP1.length === newP2.length) {
         for (var i = 0; i < length; i++) {
             if (Math.random() <= config_constants_1.ALGORITHM.CROSSOVER_PROPABILITY) {
-                _a = [p2[i], p1[i]], p1[i] = _a[0], p2[i] = _a[1];
+                _a = [newP2[i], newP1[i]], newP1[i] = _a[0], newP2[i] = _a[1];
             }
         }
     }
-    return [__spreadArrays(p1), __spreadArrays(p2)];
+    return [newP1, newP2];
 };

@@ -10,13 +10,15 @@ export const crossover = (p1: Array<number>, p2: Array<number>): Array<Array<num
 };
 
 const uniform_binary_crossover = (p1: Array<number>, p2: Array<number>): Array<Array<number>> => {
-    const length = p1.length;
-    if (p1.length === p2.length) {
+    const newP1 = [...p1];
+    const newP2 = [...p2];
+    const length = newP1.length;
+    if (newP1.length === newP2.length) {
         for (let i = 0; i < length; i++) {
             if (Math.random() <= ALGORITHM.CROSSOVER_PROPABILITY) {
-                [p1[i], p2[i]] = [p2[i], p1[i]];
+                [newP1[i], newP2[i]] = [newP2[i], newP1[i]];
             }
         }
     }
-    return [[...p1], [...p2]];
+    return [newP1, newP2];
 }
