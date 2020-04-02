@@ -9,10 +9,20 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
 exports.__esModule = true;
 var population_1 = require("./genetic_algorithm/population");
 var utilis_1 = require("./utilis");
+var config_constants_1 = require("./config.constants");
 var mathjs_1 = require("mathjs");
 var Network = /** @class */ (function () {
     function Network(mapSettings) {
         var _this = this;
+        this.NN = config_constants_1.NETWORK.NN_ARCHITECTURE;
+        this.snakeApple = 1;
+        this.calculateChromosomeLength = function (NN) {
+            var cc = 0;
+            for (var i = 0; i < NN.length - 1; i++) {
+                cc += NN[i] * NN[i + 1];
+            }
+            return cc;
+        };
         this.encodeNetworkInputs = function () {
             var snake = { x: _this.currentMovement.snakePos[0].x, y: _this.currentMovement.snakePos[0].y };
             var apple = { x: _this.currentMovement.applePos.x, y: _this.currentMovement.applePos.y };
@@ -78,32 +88,157 @@ var Network = /** @class */ (function () {
             return __spreadArrays(distanceToWalls, isThereApple, isPartOfSnake, headDirection, tailDirection);
         };
         this.calculateNetwork = function (weights) {
-            var weight = [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5];
             var layers = new Array();
-            layers[0] = [0.5, 0.25, 0.75, 1];
-            var ar = [4, 3, 2];
+            layers[0] = _this.encodeNetworkInputs();
             var acc = 0;
-            for (var i = 1; i < ar.length; i++) {
+            for (var i = 1; i < _this.NN.length; i++) {
                 layers[i] = [];
-                for (var j = 0; j < ar[i]; j++) {
-                    layers[i].push(mathjs_1.multiply(layers[i - 1], weight.slice(acc, acc + ar[i - 1])));
-                    acc += ar[i - 1];
+                for (var j = 0; j < _this.NN[i]; j++) {
+                    layers[i].push(utilis_1.sigmoid(mathjs_1.multiply(layers[i - 1], weights.slice(acc, acc + _this.NN[i - 1]))));
+                    acc += _this.NN[i - 1];
                 }
             }
-            console.table(layers);
+            return layers[layers.length - 1];
         };
-        this.updateSnakePosition = function () {
+        this.updateSnakePosition = function (weights) {
+            var _a = _this.currentMovement.snakePos[0], x = _a.x, y = _a.y;
+            var direction = utilis_1.indexOfMax(_this.calculateNetwork(weights));
+            switch (direction) {
+                case 0:
+                    if (!_this.isCollideWithBody({ x: x, y: y - 1 }) && !_this.isCollideWithWalls({ x: x, y: y - 1 }) && _this.currentMovement.health > 0) {
+                        _this.currentMovement.snakePos.unshift({ x: x, y: y - 1 });
+                        _this.currentMovement.headDirection = 'top';
+                        _this.currentMovement.tailDirection = _this.calculateTailDirection({ x: x, y: y - 1 });
+                        if (_this.isCollideWithApple({ x: x, y: y - 1 })) {
+                            _this.currentMovement.points += 1;
+                            _this.currentMovement.health = 100;
+                            _this.currentMovement.applePos = _this.randomApple(false);
+                        }
+                        else {
+                            _this.currentMovement.snakePos.splice(-1, 1);
+                            _this.currentMovement.health--;
+                        }
+                        _this.movementRegister.id += 1;
+                        _this.movementRegister.motion.push(utilis_1.copy(_this.currentMovement));
+                    }
+                    else {
+                        _this.dead = true;
+                    }
+                    break;
+                case 1:
+                    if (!_this.isCollideWithBody({ x: x + 1, y: y }) && !_this.isCollideWithWalls({ x: x + 1, y: y }) && _this.currentMovement.health > 0) {
+                        _this.currentMovement.snakePos.unshift({ x: x + 1, y: y });
+                        _this.currentMovement.headDirection = 'right';
+                        _this.currentMovement.tailDirection = _this.calculateTailDirection({ x: x + 1, y: y });
+                        if (_this.isCollideWithApple({ x: x + 1, y: y })) {
+                            _this.currentMovement.points += 1;
+                            _this.currentMovement.health = 100;
+                            _this.currentMovement.applePos = _this.randomApple(false);
+                        }
+                        else {
+                            _this.currentMovement.health--;
+                            _this.currentMovement.snakePos.splice(-1, 1);
+                        }
+                        _this.movementRegister.id += 1;
+                        _this.movementRegister.motion.push(utilis_1.copy(_this.currentMovement));
+                    }
+                    else {
+                        _this.dead = true;
+                    }
+                    break;
+                case 2:
+                    if (!_this.isCollideWithBody({ x: x, y: y + 1 }) && !_this.isCollideWithWalls({ x: x, y: y + 1 }) && _this.currentMovement.health > 0) {
+                        _this.currentMovement.snakePos.unshift({ x: x, y: y + 1 });
+                        _this.currentMovement.headDirection = 'bottom';
+                        _this.currentMovement.tailDirection = _this.calculateTailDirection({ x: x, y: y + 1 });
+                        if (_this.isCollideWithApple({ x: x, y: y + 1 })) {
+                            _this.currentMovement.points += 1;
+                            _this.currentMovement.health = 100;
+                            _this.currentMovement.applePos = _this.randomApple(false);
+                        }
+                        else {
+                            _this.currentMovement.health--;
+                            _this.currentMovement.snakePos.splice(-1, 1);
+                        }
+                        _this.movementRegister.id += 1;
+                        _this.movementRegister.motion.push(utilis_1.copy(_this.currentMovement));
+                    }
+                    else {
+                        _this.dead = true;
+                    }
+                    break;
+                case 3:
+                    if (!_this.isCollideWithBody({ x: x - 1, y: y }) && !_this.isCollideWithWalls({ x: x - 1, y: y }) && _this.currentMovement.health > 0) {
+                        _this.currentMovement.snakePos.unshift({ x: x - 1, y: y });
+                        _this.currentMovement.headDirection = 'left';
+                        _this.currentMovement.tailDirection = _this.calculateTailDirection({ x: x - 1, y: y });
+                        if (_this.isCollideWithApple({ x: x - 1, y: y })) {
+                            _this.currentMovement.points += 1;
+                            _this.currentMovement.health = 100;
+                            _this.currentMovement.applePos = _this.randomApple(false);
+                        }
+                        else {
+                            _this.currentMovement.health--;
+                            _this.currentMovement.snakePos.splice(-1, 1);
+                        }
+                        _this.movementRegister.id += 1;
+                        _this.movementRegister.motion.push(utilis_1.copy(_this.currentMovement));
+                    }
+                    else {
+                        _this.dead = true;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        };
+        this.calculateTailDirection = function (pos) {
+            var _a = _this.currentMovement.snakePos[_this.currentMovement.snakePos.length - 1], x1 = _a.x, y1 = _a.y;
+            var _b = _this.currentMovement.snakePos[_this.currentMovement.snakePos.length - 2], x2 = _b.x, y2 = _b.y;
+            var retVal = 'top';
+            if (_this.currentMovement.snakePos.length === 1) {
+                if (pos.x > x1)
+                    retVal = 'left';
+                else if (pos.x < x1)
+                    retVal = 'right';
+                else if (pos.y > y1)
+                    retVal = 'bottom';
+                else if (pos.y < y2)
+                    retVal = 'top';
+            }
+            else {
+                if (pos.x > x2)
+                    retVal = 'left';
+                else if (pos.x < x2)
+                    retVal = 'right';
+                else if (pos.y > y2)
+                    retVal = 'bottom';
+                else if (pos.y < y2)
+                    retVal = 'top';
+            }
+            return retVal;
+        };
+        this.isCollideWithBody = function (pos) {
+            return _this.currentMovement.snakePos.some(function (e) { return e.x === pos.x && e.y === pos.y; });
+        };
+        this.isCollideWithWalls = function (pos) {
+            return ((pos.x < 0 || pos.y < 0) || (pos.x > _this.mapSettings.width - 1) || (pos.y > _this.mapSettings.height - 1));
+        };
+        this.isCollideWithApple = function (pos) {
+            var _a = _this.currentMovement.applePos, x = _a.x, y = _a.y;
+            return (x === pos.x && y === pos.y);
         };
         this.randomApple = function (initial) {
             if (initial === void 0) { initial = false; }
             var randomApple;
-            _this.currentMovement.snakePos = new Array();
+            if (initial)
+                _this.currentMovement.snakePos = [{ x: 0, y: 0 }];
             for (;;) {
                 randomApple = {
                     x: (Math.floor(Math.random() * _this.mapSettings.width + 0.99)),
-                    y: (Math.floor(Math.random() * _this.mapSettings.height + 0.99))
+                    y: (Math.floor(Math.random() * _this.mapSettings.width + 0.99))
                 };
-                if (!_this.currentMovement.snakePos.some(function (e) { return e.x === randomApple.x && e.y === randomApple.y; })) {
+                if (!_this.isCollideWithBody(randomApple)) {
                     break;
                 }
                 if (initial && (randomApple.x === 0 && randomApple.y === 0)) {
@@ -119,27 +254,30 @@ var Network = /** @class */ (function () {
             _this.movementRegister = {
                 id: 0,
                 motion: [{
-                        snakePos: { x: 0, y: 0 },
+                        snakePos: [{ x: 0, y: 0 }],
                         applePos: applePos,
-                        points: 0
+                        points: 0,
+                        headDirection: 'right',
+                        tailDirection: 'left',
+                        health: 100
                     }]
             };
             _this.currentMovement = {
                 snakePos: [{ x: 0, y: 0 }],
                 applePos: applePos,
                 headDirection: 'right',
-                tailDirection: 'left'
+                tailDirection: 'left',
+                health: 100,
+                points: 0
             };
         };
         this.makeAMove = function (weights) {
             _this.initializeSnakePosition();
             while (!_this.dead) {
-                _this.encodeNetworkInputs();
-                _this.calculateNetwork(weights);
-                _this.updateSnakePosition();
+                _this.updateSnakePosition(weights);
             }
         };
-        this.sendMovementData = function () {
+        this.sendMovementRegisterToClient = function () {
         };
         this.clear = function () {
             _this.dead = false;
@@ -147,18 +285,25 @@ var Network = /** @class */ (function () {
             _this.currentMovement = {};
         };
         this.train = function () {
-            _this.population.getPopulation().forEach(function (individual) {
-                var weights = individual.getChromosome();
-                _this.makeAMove(weights);
-                _this.sendMovementData();
-                _this.clear();
-            });
-            _this.population.geneticOperators();
+            for (var i = 0; i < config_constants_1.ALGORITHM.GENERATIONS; i++) {
+                _this.population.getPopulation().forEach(function (individual) {
+                    var weights = individual.getChromosome();
+                    _this.makeAMove(weights);
+                    individual.setFitness(_this.currentMovement.points);
+                    _this.sendMovementRegisterToClient();
+                    _this.clear();
+                });
+                console.log(_this.population.findBestNetwork().getFitness());
+                _this.population.geneticOperators();
+            }
         };
         this.test = function () {
-            _this.calculateNetwork([]);
+            throw new Error("Method not implemented");
         };
-        this.population = new population_1["default"](4);
+        this.verify = function () {
+            throw new Error("Method not implemented");
+        };
+        this.population = new population_1["default"](this.calculateChromosomeLength(this.NN));
         this.dead = false;
         this.movementRegister = {};
         this.currentMovement = {};

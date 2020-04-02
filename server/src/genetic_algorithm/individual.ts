@@ -12,6 +12,9 @@ export default class Individual {
     getFitness(): number {
         return this.fitness;
     }
+    setFitness(points: number) {
+        this.fitness = points;
+    }
     getChromosome(): Array<number> {
         return this.chromosome;
     }

@@ -13,4 +13,4 @@ var network_1 = require("./network");
 //     console.log("haha");
 // }
 var net = new network_1["default"]({ width: 10, height: 10 });
-net.test();
+net.train();

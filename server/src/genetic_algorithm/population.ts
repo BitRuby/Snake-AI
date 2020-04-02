@@ -3,6 +3,7 @@ import { ALGORITHM } from "../config.constants";
 import { selection } from "./selection";
 import { mutation } from "./mutation";
 import { crossover } from "./crossover";
+import { copy } from "../utilis";
 
 export default class Population {
     private population: Array<Individual>;
@@ -13,6 +14,15 @@ export default class Population {
         this.population.map(i => {
             console.table(i.getChromosome());
         })
+    }
+    findBestNetwork = (): Individual => {
+        let best = copy(this.population[0]);
+        this.population.forEach(e => {
+            if (e.getFitness() > best.getFitness()) {
+                best = copy(e);
+            }
+        });
+        return best;
     }
     getPopulation = (): Array<Individual> => {
         return this.population;

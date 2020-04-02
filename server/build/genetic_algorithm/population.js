@@ -5,6 +5,7 @@ var config_constants_1 = require("../config.constants");
 var selection_1 = require("./selection");
 var mutation_1 = require("./mutation");
 var crossover_1 = require("./crossover");
+var utilis_1 = require("../utilis");
 var Population = /** @class */ (function () {
     function Population(chromosome_length) {
         var _this = this;
@@ -12,6 +13,15 @@ var Population = /** @class */ (function () {
             _this.population.map(function (i) {
                 console.table(i.getChromosome());
             });
+        };
+        this.findBestNetwork = function () {
+            var best = utilis_1.copy(_this.population[0]);
+            _this.population.forEach(function (e) {
+                if (e.getFitness() > best.getFitness()) {
+                    best = utilis_1.copy(e);
+                }
+            });
+            return best;
         };
         this.getPopulation = function () {
             return _this.population;

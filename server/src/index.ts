@@ -19,4 +19,4 @@ import Network from "./network";
 // }
 
 const net = new Network({ width: 10, height: 10 });
-net.test();
+net.train();

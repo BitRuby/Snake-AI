@@ -1,6 +1,10 @@
 import Individual from "./genetic_algorithm/individual";
 import { Binary, Position } from "./types";
 
+export const sigmoid = (t: any) => {
+  return 1 / (1 + Math.pow(Math.E, -t));
+};
+
 export function copy(o: any): any {
   var output: any, v, key;
   output = Array.isArray(o) ? [] : {};
@@ -10,6 +14,7 @@ export function copy(o: any): any {
   }
   return output;
 }
+
 export function shuffle<T>(array: Array<T>): Array<T> {
   var currentIndex = array.length,
     temporaryValue,
@@ -23,11 +28,31 @@ export function shuffle<T>(array: Array<T>): Array<T> {
   }
   return array;
 }
+
 export function compare(a: Individual, b: Individual): number {
   if (a.getFitness() < b.getFitness()) return 1;
   else if (a.getFitness() > b.getFitness()) return -1;
   else return 0;
 }
+
+export function indexOfMax(arr: Array<number>): number {
+  if (arr.length === 0) {
+    return -1;
+  }
+
+  var max = arr[0];
+  var maxIndex = 0;
+
+  for (var i = 1; i < arr.length; i++) {
+    if (arr[i] > max) {
+      maxIndex = i;
+      max = arr[i];
+    }
+  }
+
+  return maxIndex;
+}
+
 export const checkPosTopRight = (a: Position, b: Position, length: number): Binary => {
   for (let i = 1; ; i++) {
     if ((a.x + i === b.x) && (a.y - i === b.y)) {
@@ -40,6 +65,7 @@ export const checkPosTopRight = (a: Position, b: Position, length: number): Bina
     }
   }
 }
+
 export const checkPosBottomRight = (a: Position, b: Position, length: number): Binary => {
   for (let i = 1; ; i++) {
     if ((a.x + i === b.x) && (a.y + i === b.y)) {
@@ -52,6 +78,7 @@ export const checkPosBottomRight = (a: Position, b: Position, length: number): B
     }
   }
 }
+
 export const checkPosBottomLeft = (a: Position, b: Position, length: number): Binary => {
   for (let i = 1; ; i++) {
     if ((a.x - i === b.x) && (a.y + i === b.y)) {
@@ -64,6 +91,7 @@ export const checkPosBottomLeft = (a: Position, b: Position, length: number): Bi
     }
   }
 }
+
 export const checkPosTopLeft = (a: Position, b: Position, length: number): Binary => {
   for (let i = 1; ; i++) {
     if ((a.x - i === b.x) && (a.y - i === b.y)) {

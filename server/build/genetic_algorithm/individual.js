@@ -11,6 +11,9 @@ var Individual = /** @class */ (function () {
     Individual.prototype.getFitness = function () {
         return this.fitness;
     };
+    Individual.prototype.setFitness = function (points) {
+        this.fitness = points;
+    };
     Individual.prototype.getChromosome = function () {
         return this.chromosome;
     };

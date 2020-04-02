@@ -8,13 +8,9 @@ export interface Position {
     x: number;
     y: number;
 }
-export interface Sequence {
-    snakePos: Position;
-    applePos: Position;
-    points: number;
-}
+
 export interface MovementRegister {
-    motion: Array<Sequence>;
+    motion: Array<CurrentMovement>;
     id: number;
 }
 export interface CurrentMovement {
@@ -22,4 +18,6 @@ export interface CurrentMovement {
     applePos: Position;
     headDirection: Direction;
     tailDirection: Direction;
+    points: number;
+    health: number;
 }
