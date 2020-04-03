@@ -3,6 +3,9 @@ exports.__esModule = true;
 exports.sigmoid = function (t) {
     return 1 / (1 + Math.pow(Math.E, -t));
 };
+exports.relu = function (t) {
+    return Math.log(1 + Math.pow(Math.E, t));
+};
 var random_seed = [0.321, 0.655, 0.23, 0.976, 0.003, 0.142, 0.769, 0.865];
 exports.randomSeed = function (number) {
     return Number(((number * random_seed[number % 7]) % 1).toPrecision(4));

@@ -2,7 +2,7 @@ import Population from "../genetic_algorithm/population";
 import Individual from "../genetic_algorithm/individual";
 import { MovementRegister, CurrentMovement, MapSettings, Position } from "../types";
 import { isCollideWithBody, isCollideWithWalls, isCollideWithApple, calculateTailDirection } from "./utilis";
-import { sigmoid, indexOfMax, copy } from "../utilis";
+import { sigmoid, indexOfMax, copy, relu } from "../utilis";
 import { NETWORK, ALGORITHM } from "../config.constants";
 import { multiply } from 'mathjs';
 import { encodeNetworkInputs } from "./encoding";
@@ -37,7 +37,7 @@ export default class Network {
         for (let i = 1; i < this.NN.length; i++) {
             layers[i] = [];
             for (let j = 0; j < this.NN[i]; j++) {
-                layers[i].push(sigmoid(multiply(layers[i - 1], weights.slice(acc, acc + this.NN[i - 1]))));
+                layers[i].push(relu(multiply(layers[i - 1], weights.slice(acc, acc + this.NN[i - 1]))));
                 acc += this.NN[i - 1];
             }
         }

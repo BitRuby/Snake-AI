@@ -7,11 +7,16 @@ var mutation_1 = require("./mutation");
 var crossover_1 = require("./crossover");
 var utilis_1 = require("../utilis");
 var Population = /** @class */ (function () {
-    function Population(chromosome_length) {
+    function Population(chromosome_length, fixedSize) {
         var _this = this;
         this.printChromosomes = function () {
             _this.population.map(function (i) {
                 console.table(i.getChromosome());
+            });
+        };
+        this.printFitness = function () {
+            _this.population.map(function (i) {
+                console.table(i.getFitness());
             });
         };
         this.findBestNetwork = function () {
@@ -27,15 +32,24 @@ var Population = /** @class */ (function () {
             return _this.population;
         };
         this.geneticOperators = function () {
+            _this.selection();
+            _this.crossover();
+            _this.mutation();
+        };
+        this.selection = function () {
             _this.population = selection_1.selection(utilis_1.copy(_this.population));
+        };
+        this.crossover = function () {
             for (var i = 0; i < _this.population.length; i += 2) {
                 var offspring = crossover_1.crossover(_this.population[i].getChromosome(), _this.population[(i + 1) % _this.population.length].getChromosome());
                 _this.population[i].setChromosome(offspring[0]);
                 _this.population[(i + 1) % _this.population.length].setChromosome(offspring[1]);
             }
+        };
+        this.mutation = function () {
             _this.population.map(function (i) { return i.setChromosome(mutation_1.mutation(i.getChromosome())); });
         };
-        this.population = Array.from({ length: config_constants_1.ALGORITHM.POPULATION_SIZE }, function () { return new individual_1["default"](chromosome_length); });
+        this.population = Array.from({ length: fixedSize ? fixedSize : config_constants_1.ALGORITHM.POPULATION_SIZE }, function () { return new individual_1["default"](chromosome_length); });
     }
     return Population;
 }());

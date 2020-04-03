@@ -24,7 +24,7 @@ var Network = /** @class */ (function () {
             for (var i = 1; i < _this.NN.length; i++) {
                 layers[i] = [];
                 for (var j = 0; j < _this.NN[i]; j++) {
-                    layers[i].push(utilis_2.sigmoid(mathjs_1.multiply(layers[i - 1], weights.slice(acc, acc + _this.NN[i - 1]))));
+                    layers[i].push(utilis_2.relu(mathjs_1.multiply(layers[i - 1], weights.slice(acc, acc + _this.NN[i - 1]))));
                     acc += _this.NN[i - 1];
                 }
             }

@@ -4,6 +4,10 @@ export const sigmoid = (t: any) => {
   return 1 / (1 + Math.pow(Math.E, -t));
 };
 
+export const relu = (t: any) => {
+  return Math.log(1 + Math.pow(Math.E, t));
+}
+
 const random_seed = [0.321, 0.655, 0.23, 0.976, 0.003, 0.142, 0.769, 0.865];
 
 export const randomSeed = (number: number) => {
