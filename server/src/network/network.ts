@@ -2,7 +2,7 @@ import Population from "../genetic_algorithm/population";
 import Individual from "../genetic_algorithm/individual";
 import { MovementRegister, CurrentMovement, MapSettings, Position } from "../types";
 import { isCollideWithBody, isCollideWithWalls, isCollideWithApple, calculateTailDirection } from "./utilis";
-import { sigmoid, indexOfMax, copy, relu } from "../utilis";
+import { sigmoid, indexOfMax, copy, randomSeed, relu } from "../utilis";
 import { NETWORK, ALGORITHM } from "../config.constants";
 import { multiply } from 'mathjs';
 import { encodeNetworkInputs } from "./encoding";
@@ -14,6 +14,7 @@ export default class Network {
     private currentMovement: CurrentMovement;
     private mapSettings: MapSettings;
     private NN: Array<number> = NETWORK.NN_ARCHITECTURE;
+    private randomSeedNumber: number = 0;
     constructor(mapSettings: MapSettings) {
         this.population = new Population(this.calculateChromosomeLength(this.NN));
         this.dead = false;
@@ -46,22 +47,42 @@ export default class Network {
 
     private updateSnakePosition = (weights: Array<number>) => {
         const { x, y } = this.currentMovement.snakePos[0];
-        const direction: number = indexOfMax(this.calculateNetwork(weights));
+        let direction: number = indexOfMax(this.calculateNetwork(weights));
+        switch (direction) {
+            case 0:
+                if (this.currentMovement.headDirection === 'bottom') {
+                    direction = 1;
+                }
+                break;
+            case 1:
+                if (this.currentMovement.headDirection === 'top') {
+                    direction = 0;
+                }
+                break;
+            case 2:
+                if (this.currentMovement.headDirection === 'right') {
+                    direction = 3;
+                }
+                break;
+            case 3:
+                if (this.currentMovement.headDirection === 'left') {
+                    direction = 2;
+                }
+                break;
+        }
         switch (direction) {
             case 0:
                 if (!isCollideWithBody({ x, y: y - 1 }, this.currentMovement) && !isCollideWithWalls({ x, y: y - 1 }, this.mapSettings) && this.currentMovement.health > 0) {
-                    this.currentMovement.headDirection = 'top';
-                    this.currentMovement.tailDirection = calculateTailDirection(0, -1, this.currentMovement);
                     this.currentMovement.snakePos.unshift({ x, y: y - 1 });
+                    this.currentMovement.headDirection = 'top';
+                    this.currentMovement.tailDirection = calculateTailDirection(this.currentMovement);
                     if (isCollideWithApple({ x, y: y - 1 }, this.currentMovement)) {
                         this.currentMovement.points += 1;
                         this.currentMovement.health = 100;
                         this.currentMovement.applePos = this.randomApple(false);
-
                     } else {
                         this.currentMovement.snakePos.splice(-1, 1);
                         this.currentMovement.health--;
-
                     }
                     this.movementRegister.id += 1;
                     this.movementRegister.motion.push(copy(this.currentMovement));
@@ -70,30 +91,10 @@ export default class Network {
                 }
                 break;
             case 1:
-                if (!isCollideWithBody({ x: x + 1, y }, this.currentMovement) && !isCollideWithWalls({ x: x + 1, y }, this.mapSettings) && this.currentMovement.health > 0) {
-                    this.currentMovement.headDirection = 'bottom';
-                    this.currentMovement.tailDirection = calculateTailDirection(1, 0, this.currentMovement);
-                    this.currentMovement.snakePos.unshift({ x: x + 1, y });
-                    if (isCollideWithApple({ x: x + 1, y }, this.currentMovement)) {
-                        this.currentMovement.points += 1;
-                        this.currentMovement.health = 100;
-                        this.currentMovement.applePos = this.randomApple(false);
-
-                    } else {
-                        this.currentMovement.health--;
-                        this.currentMovement.snakePos.splice(-1, 1);
-                    }
-                    this.movementRegister.id += 1;
-                    this.movementRegister.motion.push(copy(this.currentMovement));
-                } else {
-                    this.dead = true;
-                }
-                break;
-            case 2:
                 if (!isCollideWithBody({ x, y: y + 1 }, this.currentMovement) && !isCollideWithWalls({ x, y: y + 1 }, this.mapSettings) && this.currentMovement.health > 0) {
-                    this.currentMovement.headDirection = 'left';
-                    this.currentMovement.tailDirection = calculateTailDirection(0, 1, this.currentMovement);
                     this.currentMovement.snakePos.unshift({ x, y: y + 1 });
+                    this.currentMovement.headDirection = 'bottom';
+                    this.currentMovement.tailDirection = calculateTailDirection(this.currentMovement);
                     if (isCollideWithApple({ x, y: y + 1 }, this.currentMovement)) {
                         this.currentMovement.points += 1;
                         this.currentMovement.health = 100;
@@ -108,12 +109,31 @@ export default class Network {
                     this.dead = true;
                 }
                 break;
-            case 3:
+            case 2:
                 if (!isCollideWithBody({ x: x - 1, y }, this.currentMovement) && !isCollideWithWalls({ x: x - 1, y }, this.mapSettings) && this.currentMovement.health > 0) {
-                    this.currentMovement.headDirection = 'right';
-                    this.currentMovement.tailDirection = calculateTailDirection(-1, 0, this.currentMovement);
                     this.currentMovement.snakePos.unshift({ x: x - 1, y });
+                    this.currentMovement.headDirection = 'left';
+                    this.currentMovement.tailDirection = calculateTailDirection(this.currentMovement);
                     if (isCollideWithApple({ x: x - 1, y }, this.currentMovement)) {
+                        this.currentMovement.points += 1;
+                        this.currentMovement.health = 100;
+                        this.currentMovement.applePos = this.randomApple(false);
+                    } else {
+                        this.currentMovement.health--;
+                        this.currentMovement.snakePos.splice(-1, 1);
+                    }
+                    this.movementRegister.id += 1;
+                    this.movementRegister.motion.push(copy(this.currentMovement));
+                } else {
+                    this.dead = true;
+                }
+                break;
+            case 3:
+                if (!isCollideWithBody({ x: x + 1, y }, this.currentMovement) && !isCollideWithWalls({ x: x + 1, y }, this.mapSettings) && this.currentMovement.health > 0) {
+                    this.currentMovement.snakePos.unshift({ x: x + 1, y });
+                    this.currentMovement.headDirection = 'right';
+                    this.currentMovement.tailDirection = calculateTailDirection(this.currentMovement);
+                    if (isCollideWithApple({ x: x + 1, y }, this.currentMovement)) {
                         this.currentMovement.points += 1;
                         this.currentMovement.health = 100;
                         this.currentMovement.applePos = this.randomApple(false);
@@ -138,9 +158,9 @@ export default class Network {
         for (; ;) {
             randomApple = {
                 x:
-                    (Math.floor(Math.random() * this.mapSettings.width + 0.99)),
+                    (Math.floor(randomSeed(this.randomSeedNumber++) * (this.mapSettings.width - 0.01))),
                 y:
-                    (Math.floor(Math.random() * this.mapSettings.width + 0.99)),
+                    (Math.floor(randomSeed(this.randomSeedNumber++) * (this.mapSettings.height - 0.01))),
             };
             if (
                 !isCollideWithBody(randomApple, this.currentMovement)
@@ -194,6 +214,7 @@ export default class Network {
         this.dead = false;
         this.movementRegister = {} as MovementRegister;
         this.currentMovement = {} as CurrentMovement;
+        this.randomSeedNumber = 0;
     }
 
     private calculateFitness = (): number => {

@@ -10,6 +10,7 @@ var Network = /** @class */ (function () {
     function Network(mapSettings) {
         var _this = this;
         this.NN = config_constants_1.NETWORK.NN_ARCHITECTURE;
+        this.randomSeedNumber = 0;
         this.calculateChromosomeLength = function (NN) {
             var cc = 0;
             for (var i = 0; i < NN.length - 1; i++) {
@@ -35,10 +36,32 @@ var Network = /** @class */ (function () {
             var direction = utilis_2.indexOfMax(_this.calculateNetwork(weights));
             switch (direction) {
                 case 0:
+                    if (_this.currentMovement.headDirection === 'bottom') {
+                        direction = 1;
+                    }
+                    break;
+                case 1:
+                    if (_this.currentMovement.headDirection === 'top') {
+                        direction = 0;
+                    }
+                    break;
+                case 2:
+                    if (_this.currentMovement.headDirection === 'right') {
+                        direction = 3;
+                    }
+                    break;
+                case 3:
+                    if (_this.currentMovement.headDirection === 'left') {
+                        direction = 2;
+                    }
+                    break;
+            }
+            switch (direction) {
+                case 0:
                     if (!utilis_1.isCollideWithBody({ x: x, y: y - 1 }, _this.currentMovement) && !utilis_1.isCollideWithWalls({ x: x, y: y - 1 }, _this.mapSettings) && _this.currentMovement.health > 0) {
-                        _this.currentMovement.headDirection = 'top';
-                        _this.currentMovement.tailDirection = utilis_1.calculateTailDirection(0, -1, _this.currentMovement);
                         _this.currentMovement.snakePos.unshift({ x: x, y: y - 1 });
+                        _this.currentMovement.headDirection = 'top';
+                        _this.currentMovement.tailDirection = utilis_1.calculateTailDirection(_this.currentMovement);
                         if (utilis_1.isCollideWithApple({ x: x, y: y - 1 }, _this.currentMovement)) {
                             _this.currentMovement.points += 1;
                             _this.currentMovement.health = 100;
@@ -56,31 +79,10 @@ var Network = /** @class */ (function () {
                     }
                     break;
                 case 1:
-                    if (!utilis_1.isCollideWithBody({ x: x + 1, y: y }, _this.currentMovement) && !utilis_1.isCollideWithWalls({ x: x + 1, y: y }, _this.mapSettings) && _this.currentMovement.health > 0) {
-                        _this.currentMovement.headDirection = 'bottom';
-                        _this.currentMovement.tailDirection = utilis_1.calculateTailDirection(1, 0, _this.currentMovement);
-                        _this.currentMovement.snakePos.unshift({ x: x + 1, y: y });
-                        if (utilis_1.isCollideWithApple({ x: x + 1, y: y }, _this.currentMovement)) {
-                            _this.currentMovement.points += 1;
-                            _this.currentMovement.health = 100;
-                            _this.currentMovement.applePos = _this.randomApple(false);
-                        }
-                        else {
-                            _this.currentMovement.health--;
-                            _this.currentMovement.snakePos.splice(-1, 1);
-                        }
-                        _this.movementRegister.id += 1;
-                        _this.movementRegister.motion.push(utilis_2.copy(_this.currentMovement));
-                    }
-                    else {
-                        _this.dead = true;
-                    }
-                    break;
-                case 2:
                     if (!utilis_1.isCollideWithBody({ x: x, y: y + 1 }, _this.currentMovement) && !utilis_1.isCollideWithWalls({ x: x, y: y + 1 }, _this.mapSettings) && _this.currentMovement.health > 0) {
-                        _this.currentMovement.headDirection = 'left';
-                        _this.currentMovement.tailDirection = utilis_1.calculateTailDirection(0, 1, _this.currentMovement);
                         _this.currentMovement.snakePos.unshift({ x: x, y: y + 1 });
+                        _this.currentMovement.headDirection = 'bottom';
+                        _this.currentMovement.tailDirection = utilis_1.calculateTailDirection(_this.currentMovement);
                         if (utilis_1.isCollideWithApple({ x: x, y: y + 1 }, _this.currentMovement)) {
                             _this.currentMovement.points += 1;
                             _this.currentMovement.health = 100;
@@ -97,12 +99,33 @@ var Network = /** @class */ (function () {
                         _this.dead = true;
                     }
                     break;
-                case 3:
+                case 2:
                     if (!utilis_1.isCollideWithBody({ x: x - 1, y: y }, _this.currentMovement) && !utilis_1.isCollideWithWalls({ x: x - 1, y: y }, _this.mapSettings) && _this.currentMovement.health > 0) {
-                        _this.currentMovement.headDirection = 'right';
-                        _this.currentMovement.tailDirection = utilis_1.calculateTailDirection(-1, 0, _this.currentMovement);
                         _this.currentMovement.snakePos.unshift({ x: x - 1, y: y });
+                        _this.currentMovement.headDirection = 'left';
+                        _this.currentMovement.tailDirection = utilis_1.calculateTailDirection(_this.currentMovement);
                         if (utilis_1.isCollideWithApple({ x: x - 1, y: y }, _this.currentMovement)) {
+                            _this.currentMovement.points += 1;
+                            _this.currentMovement.health = 100;
+                            _this.currentMovement.applePos = _this.randomApple(false);
+                        }
+                        else {
+                            _this.currentMovement.health--;
+                            _this.currentMovement.snakePos.splice(-1, 1);
+                        }
+                        _this.movementRegister.id += 1;
+                        _this.movementRegister.motion.push(utilis_2.copy(_this.currentMovement));
+                    }
+                    else {
+                        _this.dead = true;
+                    }
+                    break;
+                case 3:
+                    if (!utilis_1.isCollideWithBody({ x: x + 1, y: y }, _this.currentMovement) && !utilis_1.isCollideWithWalls({ x: x + 1, y: y }, _this.mapSettings) && _this.currentMovement.health > 0) {
+                        _this.currentMovement.snakePos.unshift({ x: x + 1, y: y });
+                        _this.currentMovement.headDirection = 'right';
+                        _this.currentMovement.tailDirection = utilis_1.calculateTailDirection(_this.currentMovement);
+                        if (utilis_1.isCollideWithApple({ x: x + 1, y: y }, _this.currentMovement)) {
                             _this.currentMovement.points += 1;
                             _this.currentMovement.health = 100;
                             _this.currentMovement.applePos = _this.randomApple(false);
@@ -129,8 +152,8 @@ var Network = /** @class */ (function () {
                 _this.currentMovement.snakePos = [{ x: 0, y: 0 }];
             for (;;) {
                 randomApple = {
-                    x: (Math.floor(Math.random() * _this.mapSettings.width + 0.99)),
-                    y: (Math.floor(Math.random() * _this.mapSettings.width + 0.99))
+                    x: (Math.floor(utilis_2.randomSeed(_this.randomSeedNumber++) * (_this.mapSettings.width - 0.01))),
+                    y: (Math.floor(utilis_2.randomSeed(_this.randomSeedNumber++) * (_this.mapSettings.height - 0.01)))
                 };
                 if (!utilis_1.isCollideWithBody(randomApple, _this.currentMovement)) {
                     break;
@@ -177,6 +200,7 @@ var Network = /** @class */ (function () {
             _this.dead = false;
             _this.movementRegister = {};
             _this.currentMovement = {};
+            _this.randomSeedNumber = 0;
         };
         this.calculateFitness = function () {
             return (100 - _this.currentMovement.health) + ((Math.pow(2, _this.currentMovement.points) + Math.pow(_this.currentMovement.points, 2.1) * 500) - (Math.pow(_this.currentMovement.points, 1.2) * (Math.pow(0.25 * (100 - _this.currentMovement.health), 1.3))));

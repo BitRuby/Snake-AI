@@ -6,6 +6,8 @@ export const selection = (population: Array<Individual>): Array<Individual> => {
     switch (ALGORITHM.SELECTION_TYPE) {
         case "tournament":
             return torunament_selection(population);
+        case "roulette":
+            return roulette_selection(population);
         default:
             return torunament_selection(population);
     }
@@ -21,3 +23,7 @@ const torunament_selection = (population: Array<Individual>): Array<Individual> 
     }
     return newPopulation;
 };
+
+const roulette_selection = (population: Array<Individual>): Array<Individual> => {
+    return [];
+}

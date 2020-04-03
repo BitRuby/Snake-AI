@@ -1,5 +1,5 @@
-type SELECTION_TYPES = 'tournament';
-type CROSSOVER_TYPES = 'uniform_binary';
+type SELECTION_TYPES = 'tournament' | 'roulette';
+type CROSSOVER_TYPES = 'uniform_binary' | 'one_point';
 type MUTATION_TYPES = 'uniform_mutation';
 type ACTIVATION_FUNCTION_TYPES = 'sigmoid' | "relu";
 
@@ -25,20 +25,20 @@ interface INetwork {
 
 export const ALGORITHM: IAlgorithm = {
   GENERATIONS: 1000,
-  POPULATION_SIZE: 700,
+  POPULATION_SIZE: 500,
   SELECTION_TYPE: "tournament",
-  TOURNAMENT_SIZE: 70,
+  TOURNAMENT_SIZE: 50,
   CROSSOVER_TYPE: "uniform_binary",
-  CROSSOVER_PROPABILITY: 0.5,
+  CROSSOVER_PROPABILITY: 0.65,
   MUTATION_TYPE: "uniform_mutation",
-  MUTATION_UNIFORM_PROPABILITY: 0.05,
+  MUTATION_UNIFORM_PROPABILITY: 0.1,
   MUTATION_UNIFORM_LOWER_BOUNDS: 0,
   MUTATION_UNIFORM_UPPER_BOUNDS: 1
 };
 
 export const NETWORK: INetwork = {
-  RANDOM_WEIGHTS_LOWER_BOUNDS: -1,
-  RANDOM_WEIGHTS_UPPER_BOUNDS: 1,
+  RANDOM_WEIGHTS_LOWER_BOUNDS: -5,
+  RANDOM_WEIGHTS_UPPER_BOUNDS: 5,
   ACTIVATION_FUNCTION: "sigmoid",
-  NN_ARCHITECTURE: [32, 28, 8, 4]
+  NN_ARCHITECTURE: [32, 20, 12, 4]
 };

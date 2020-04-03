@@ -65,20 +65,28 @@ export const isCollideWithApple = (pos: Position, currentMovement: CurrentMoveme
     return (x === pos.x && y === pos.y);
 }
 
-export const calculateTailDirection = (newX: number, newY: number, currentMovement: CurrentMovement): Direction => {
+export const calculateTailDirection = (currentMovement: CurrentMovement): Direction => {
     let retVal: Direction = 'top';
     if (currentMovement.snakePos.length <= 1) {
         const { x: x1, y: y1 } = currentMovement.snakePos[currentMovement.snakePos.length - 1];
-        if (x1 + newX > x1) retVal = 'left';
-        else if (x1 + newX < x1) retVal = 'right';
-        else if (y1 + newY > y1) retVal = 'bottom';
-        else if (y1 + newY < y1) retVal = 'top';
-    } else if (currentMovement.snakePos.length >= 2) {
-        const { x: x2, y: y2 } = currentMovement.snakePos[currentMovement.snakePos.length - 2];
-        if (x2 + newX > x2) retVal = 'left';
-        else if (x2 + newX < x2) retVal = 'right';
-        else if (y2 + newY > y2) retVal = 'bottom';
-        else if (y2 + newY < y2) retVal = 'top';
+        if (currentMovement.headDirection === 'right') return 'left';
+        else if (currentMovement.headDirection === 'left') return 'right';
+        else if (currentMovement.headDirection === 'top') return 'bottom';
+        else if (currentMovement.headDirection === 'bottom') return 'top';
+    }
+    else if (currentMovement.snakePos.length > 1) {
+        const p2 = currentMovement.snakePos[currentMovement.snakePos.length - 2];
+        const p1 = currentMovement.snakePos[currentMovement.snakePos.length - 1];
+        const diffX = p2.x - p1.x;
+        const diffY = p2.y - p1.y;
+        if (diffX < 0)
+            retVal = 'left';
+        else if (diffX > 0)
+            retVal = 'right';
+        else if (diffY > 0)
+            retVal = 'bottom';
+        else if (diffY < 0)
+            retVal = 'top'
     }
     return retVal;
 }

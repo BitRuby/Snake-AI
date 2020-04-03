@@ -6,6 +6,8 @@ exports.selection = function (population) {
     switch (config_constants_1.ALGORITHM.SELECTION_TYPE) {
         case "tournament":
             return torunament_selection(population);
+        case "roulette":
+            return roulette_selection(population);
         default:
             return torunament_selection(population);
     }
@@ -19,4 +21,7 @@ var torunament_selection = function (population) {
         newPopulation.push(maximum);
     }
     return newPopulation;
+};
+var roulette_selection = function (population) {
+    return [];
 };

@@ -58,28 +58,31 @@ exports.isCollideWithApple = function (pos, currentMovement) {
     var _a = currentMovement.applePos, x = _a.x, y = _a.y;
     return (x === pos.x && y === pos.y);
 };
-exports.calculateTailDirection = function (newX, newY, currentMovement) {
+exports.calculateTailDirection = function (currentMovement) {
     var retVal = 'top';
     if (currentMovement.snakePos.length <= 1) {
         var _a = currentMovement.snakePos[currentMovement.snakePos.length - 1], x1 = _a.x, y1 = _a.y;
-        if (x1 + newX > x1)
-            retVal = 'left';
-        else if (x1 + newX < x1)
-            retVal = 'right';
-        else if (y1 + newY > y1)
-            retVal = 'bottom';
-        else if (y1 + newY < y1)
-            retVal = 'top';
+        if (currentMovement.headDirection === 'right')
+            return 'left';
+        else if (currentMovement.headDirection === 'left')
+            return 'right';
+        else if (currentMovement.headDirection === 'top')
+            return 'bottom';
+        else if (currentMovement.headDirection === 'bottom')
+            return 'top';
     }
-    else if (currentMovement.snakePos.length >= 2) {
-        var _b = currentMovement.snakePos[currentMovement.snakePos.length - 2], x2 = _b.x, y2 = _b.y;
-        if (x2 + newX > x2)
+    else if (currentMovement.snakePos.length > 1) {
+        var p2 = currentMovement.snakePos[currentMovement.snakePos.length - 2];
+        var p1 = currentMovement.snakePos[currentMovement.snakePos.length - 1];
+        var diffX = p2.x - p1.x;
+        var diffY = p2.y - p1.y;
+        if (diffX < 0)
             retVal = 'left';
-        else if (x2 + newX < x2)
+        else if (diffX > 0)
             retVal = 'right';
-        else if (y2 + newY > y2)
+        else if (diffY > 0)
             retVal = 'bottom';
-        else if (y2 + newY < y2)
+        else if (diffY < 0)
             retVal = 'top';
     }
     return retVal;
