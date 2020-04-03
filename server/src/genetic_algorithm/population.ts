@@ -28,7 +28,7 @@ export default class Population {
         return this.population;
     }
     geneticOperators = () => {
-        this.population = selection(this.population);
+        this.population = selection(copy(this.population));
         for (let i = 0; i < this.population.length; i += 2) {
             const offspring = crossover(this.population[i].getChromosome(), this.population[(i + 1) % this.population.length].getChromosome());
             this.population[i].setChromosome(offspring[0]);

@@ -27,7 +27,7 @@ var Population = /** @class */ (function () {
             return _this.population;
         };
         this.geneticOperators = function () {
-            _this.population = selection_1.selection(_this.population);
+            _this.population = selection_1.selection(utilis_1.copy(_this.population));
             for (var i = 0; i < _this.population.length; i += 2) {
                 var offspring = crossover_1.crossover(_this.population[i].getChromosome(), _this.population[(i + 1) % _this.population.length].getChromosome());
                 _this.population[i].setChromosome(offspring[0]);

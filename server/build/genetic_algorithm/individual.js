@@ -7,9 +7,16 @@ var Individual = /** @class */ (function () {
         var high = config_constants_1.NETWORK.RANDOM_WEIGHTS_UPPER_BOUNDS;
         this.chromosome = Array.from({ length: chromosome_length }, function () { return Math.random() * (high - low) + low; });
         this.fitness = 0;
+        this.points = 0;
     }
+    Individual.prototype.getPoints = function () {
+        return this.points;
+    };
     Individual.prototype.getFitness = function () {
         return this.fitness;
+    };
+    Individual.prototype.setPoints = function (points) {
+        this.points = points;
     };
     Individual.prototype.setFitness = function (points) {
         this.fitness = points;

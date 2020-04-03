@@ -60,13 +60,13 @@ var Network = /** @class */ (function () {
                 case 'top':
                     headDirection = [1, 0, 0, 0];
                     break;
-                case 'right':
+                case 'bottom':
                     headDirection = [0, 1, 0, 0];
                     break;
-                case 'bottom':
+                case 'left':
                     headDirection = [0, 0, 1, 0];
                     break;
-                case 'left':
+                case 'right':
                     headDirection = [0, 0, 0, 1];
                     break;
             }
@@ -74,13 +74,13 @@ var Network = /** @class */ (function () {
                 case 'top':
                     tailDirection = [1, 0, 0, 0];
                     break;
-                case 'right':
+                case 'bottom':
                     tailDirection = [0, 1, 0, 0];
                     break;
-                case 'bottom':
+                case 'left':
                     tailDirection = [0, 0, 1, 0];
                     break;
-                case 'left':
+                case 'right':
                     tailDirection = [0, 0, 0, 1];
                     break;
             }
@@ -126,7 +126,7 @@ var Network = /** @class */ (function () {
                     break;
                 case 1:
                     if (!_this.isCollideWithBody({ x: x + 1, y: y }) && !_this.isCollideWithWalls({ x: x + 1, y: y }) && _this.currentMovement.health > 0) {
-                        _this.currentMovement.headDirection = 'right';
+                        _this.currentMovement.headDirection = 'bottom';
                         _this.currentMovement.tailDirection = _this.calculateTailDirection(1, 0);
                         _this.currentMovement.snakePos.unshift({ x: x + 1, y: y });
                         if (_this.isCollideWithApple({ x: x + 1, y: y })) {
@@ -147,7 +147,7 @@ var Network = /** @class */ (function () {
                     break;
                 case 2:
                     if (!_this.isCollideWithBody({ x: x, y: y + 1 }) && !_this.isCollideWithWalls({ x: x, y: y + 1 }) && _this.currentMovement.health > 0) {
-                        _this.currentMovement.headDirection = 'bottom';
+                        _this.currentMovement.headDirection = 'left';
                         _this.currentMovement.tailDirection = _this.calculateTailDirection(0, 1);
                         _this.currentMovement.snakePos.unshift({ x: x, y: y + 1 });
                         if (_this.isCollideWithApple({ x: x, y: y + 1 })) {
@@ -168,7 +168,7 @@ var Network = /** @class */ (function () {
                     break;
                 case 3:
                     if (!_this.isCollideWithBody({ x: x - 1, y: y }) && !_this.isCollideWithWalls({ x: x - 1, y: y }) && _this.currentMovement.health > 0) {
-                        _this.currentMovement.headDirection = 'left';
+                        _this.currentMovement.headDirection = 'right';
                         _this.currentMovement.tailDirection = _this.calculateTailDirection(-1, 0);
                         _this.currentMovement.snakePos.unshift({ x: x - 1, y: y });
                         if (_this.isCollideWithApple({ x: x - 1, y: y })) {
@@ -193,7 +193,7 @@ var Network = /** @class */ (function () {
         };
         this.calculateTailDirection = function (newX, newY) {
             var retVal = 'top';
-            if (_this.currentMovement.snakePos.length === 1) {
+            if (_this.currentMovement.snakePos.length <= 1) {
                 var _a = _this.currentMovement.snakePos[_this.currentMovement.snakePos.length - 1], x1 = _a.x, y1 = _a.y;
                 if (x1 + newX > x1)
                     retVal = 'left';
@@ -215,8 +215,6 @@ var Network = /** @class */ (function () {
                 else if (y2 + newY < y2)
                     retVal = 'top';
             }
-            else
-                console.log("WTF?: " + _this.currentMovement.snakePos.length);
             return retVal;
         };
         this.isCollideWithBody = function (pos) {
@@ -290,11 +288,13 @@ var Network = /** @class */ (function () {
                 _this.population.getPopulation().forEach(function (individual) {
                     var weights = individual.getChromosome();
                     _this.makeAMove(weights);
-                    individual.setFitness(_this.currentMovement.points);
+                    individual.setFitness((100 - _this.currentMovement.health) + ((Math.pow(2, _this.currentMovement.points) + Math.pow(_this.currentMovement.points, 2.1) * 500) - (Math.pow(_this.currentMovement.points, 1.2) * (Math.pow(0.25 * (100 - _this.currentMovement.health), 1.3)))));
+                    individual.setPoints(_this.currentMovement.points);
                     _this.sendMovementRegisterToClient();
                     _this.clear();
                 });
                 console.log(_this.population.findBestNetwork().getFitness());
+                console.log(_this.population.findBestNetwork().getPoints());
                 _this.population.geneticOperators();
             }
         };

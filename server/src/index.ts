@@ -1,6 +1,6 @@
 // import WebSocket from "ws";
 import Population from "./genetic_algorithm/population";
-import Network from "./network";
+import Network from "./network/network";
 
 // const ws = new WebSocket.Server({ port: 8080 });
 

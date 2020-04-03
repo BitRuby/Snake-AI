@@ -1,5 +1,4 @@
 import Individual from "./genetic_algorithm/individual";
-import { Binary, Position } from "./types";
 
 export const sigmoid = (t: any) => {
   return 1 / (1 + Math.pow(Math.E, -t));
@@ -61,56 +60,4 @@ export function indexOfMax(arr: Array<number>): number {
   }
 
   return maxIndex;
-}
-
-export const checkPosTopRight = (a: Position, b: Position, length: number): Binary => {
-  for (let i = 1; ; i++) {
-    if ((a.x + i === b.x) && (a.y - i === b.y)) {
-      return 1;
-    }
-    else {
-      if (((a.x + i) >= length) || ((a.y - i) <= 0)) {
-        return 0;
-      }
-    }
-  }
-}
-
-export const checkPosBottomRight = (a: Position, b: Position, length: number): Binary => {
-  for (let i = 1; ; i++) {
-    if ((a.x + i === b.x) && (a.y + i === b.y)) {
-      return 1;
-    }
-    else {
-      if (((a.x + i) >= length) || ((a.y + i) >= length)) {
-        return 0;
-      }
-    }
-  }
-}
-
-export const checkPosBottomLeft = (a: Position, b: Position, length: number): Binary => {
-  for (let i = 1; ; i++) {
-    if ((a.x - i === b.x) && (a.y + i === b.y)) {
-      return 1;
-    }
-    else {
-      if (((a.x - i) <= 0) || ((a.y + i) >= length)) {
-        return 0;
-      }
-    }
-  }
-}
-
-export const checkPosTopLeft = (a: Position, b: Position, length: number): Binary => {
-  for (let i = 1; ; i++) {
-    if ((a.x - i === b.x) && (a.y - i === b.y)) {
-      return 1;
-    }
-    else {
-      if (((a.x - i) <= 0) || ((a.y - i) <= 0)) {
-        return 0;
-      }
-    }
-  }
 }

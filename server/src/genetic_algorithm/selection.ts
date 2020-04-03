@@ -16,8 +16,8 @@ const torunament_selection = (population: Array<Individual>): Array<Individual> 
     var newPopulation = [];
     while (newPopulation.length !== population.length) {
         var pop = shuffle(population).slice(0, x);
-        var maximum = pop.sort(compare)[0];
-        newPopulation.push(copy(maximum));
+        var maximum = copy(pop.sort(compare)[0]);
+        newPopulation.push(maximum);
     }
     return newPopulation;
 };

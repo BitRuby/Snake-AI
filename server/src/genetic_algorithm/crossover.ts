@@ -22,3 +22,4 @@ const uniform_binary_crossover = (p1: Array<number>, p2: Array<number>): Array<A
     }
     return [newP1, newP2];
 }
+
