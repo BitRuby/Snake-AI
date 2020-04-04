@@ -80,13 +80,13 @@ export const calculateTailDirection = (currentMovement: CurrentMovement): Direct
         const diffX = p2.x - p1.x;
         const diffY = p2.y - p1.y;
         if (diffX < 0)
-            retVal = 'left';
-        else if (diffX > 0)
             retVal = 'right';
+        else if (diffX > 0)
+            retVal = 'left';
         else if (diffY > 0)
-            retVal = 'bottom';
+            retVal = 'top';
         else if (diffY < 0)
-            retVal = 'top'
+            retVal = 'bottom'
     }
     return retVal;
 }

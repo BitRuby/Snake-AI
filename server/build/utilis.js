@@ -1,5 +1,6 @@
 "use strict";
 exports.__esModule = true;
+var lodash_1 = require("lodash");
 exports.sigmoid = function (t) {
     return 1 / (1 + Math.pow(Math.E, -t));
 };
@@ -19,13 +20,7 @@ exports.normalize = function (T, Tmin, Tmax) {
     return Tmax === Tmin ? 1 : (T - Tmin) / (Tmax - Tmin);
 };
 function copy(o) {
-    var output, v, key;
-    output = Array.isArray(o) ? [] : {};
-    for (key in o) {
-        v = o[key];
-        output[key] = typeof v === "object" ? copy(v) : v;
-    }
-    return output;
+    return lodash_1.cloneDeep(o);
 }
 exports.copy = copy;
 function shuffle(array) {

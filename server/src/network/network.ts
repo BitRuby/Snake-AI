@@ -160,9 +160,9 @@ export default class Network {
         for (; ;) {
             randomApple = {
                 x:
-                    (Math.floor(randomSeed(this.randomSeedNumber++) * (this.mapSettings.width - 0.01))),
+                    (Math.floor(randomSeed(++this.randomSeedNumber) * (this.mapSettings.width - 0.01))),
                 y:
-                    (Math.floor(randomSeed(this.randomSeedNumber++) * (this.mapSettings.height - 0.01))),
+                    (Math.floor(randomSeed(++this.randomSeedNumber) * (this.mapSettings.height - 0.01))),
             };
             if (
                 !isCollideWithBody(randomApple, this.currentMovement)

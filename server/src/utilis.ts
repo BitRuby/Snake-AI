@@ -1,5 +1,5 @@
 import Individual from "./genetic_algorithm/individual";
-
+import { cloneDeep } from "lodash";
 export const sigmoid = (t: any) => {
   return 1 / (1 + Math.pow(Math.E, -t));
 };
@@ -23,13 +23,7 @@ export const normalize = (T: number, Tmin: number, Tmax: number) => {
 };
 
 export function copy(o: any): any {
-  var output: any, v, key;
-  output = Array.isArray(o) ? [] : {};
-  for (key in o) {
-    v = o[key];
-    output[key] = typeof v === "object" ? copy(v) : v;
-  }
-  return output;
+  return cloneDeep(o);
 }
 
 export function shuffle<T>(array: Array<T>): Array<T> {

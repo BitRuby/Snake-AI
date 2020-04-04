@@ -77,13 +77,13 @@ exports.calculateTailDirection = function (currentMovement) {
         var diffX = p2.x - p1.x;
         var diffY = p2.y - p1.y;
         if (diffX < 0)
-            retVal = 'left';
-        else if (diffX > 0)
             retVal = 'right';
+        else if (diffX > 0)
+            retVal = 'left';
         else if (diffY > 0)
-            retVal = 'bottom';
-        else if (diffY < 0)
             retVal = 'top';
+        else if (diffY < 0)
+            retVal = 'bottom';
     }
     return retVal;
 };
