@@ -5,7 +5,7 @@ import { isCollideWithBody, isCollideWithWalls, isCollideWithApple, calculateTai
 import { sigmoid, indexOfMax, copy, randomSeed, relu } from "../utilis";
 import { NETWORK, ALGORITHM } from "../config.constants";
 import { multiply } from 'mathjs';
-import { encodeNetworkInputs } from "./encoding";
+import { encodeNetworkInputs, encodeNetworkInputs2 } from "./encoding";
 import { activation } from "./activation";
 
 export default class Network {
@@ -34,7 +34,7 @@ export default class Network {
 
     private calculateNetwork = (weights: Array<number>): Array<number> => {
         let layers = new Array<Array<number>>();
-        layers[0] = encodeNetworkInputs(this.currentMovement, this.mapSettings);
+        layers[0] = encodeNetworkInputs2(this.currentMovement, this.mapSettings);
         let acc = 0;
         for (let i = 1; i < this.NN.length; i++) {
             layers[i] = [];
@@ -160,9 +160,9 @@ export default class Network {
         for (; ;) {
             randomApple = {
                 x:
-                    (Math.floor(randomSeed(++this.randomSeedNumber) * (this.mapSettings.width - 0.01))),
+                    (Math.floor(randomSeed(this.randomSeedNumber++) * (this.mapSettings.width - 0.01))),
                 y:
-                    (Math.floor(randomSeed(++this.randomSeedNumber) * (this.mapSettings.height - 0.01))),
+                    (Math.floor(randomSeed(this.randomSeedNumber++) * (this.mapSettings.height - 0.01))),
             };
             if (
                 !isCollideWithBody(randomApple, this.currentMovement)

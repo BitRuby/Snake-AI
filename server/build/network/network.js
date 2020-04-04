@@ -21,7 +21,7 @@ var Network = /** @class */ (function () {
         };
         this.calculateNetwork = function (weights) {
             var layers = new Array();
-            layers[0] = encoding_1.encodeNetworkInputs(_this.currentMovement, _this.mapSettings);
+            layers[0] = encoding_1.encodeNetworkInputs2(_this.currentMovement, _this.mapSettings);
             var acc = 0;
             for (var i = 1; i < _this.NN.length; i++) {
                 layers[i] = [];

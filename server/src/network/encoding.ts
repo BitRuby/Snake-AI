@@ -1,5 +1,17 @@
 import { CurrentMovement, MapSettings, Position, Binary } from "../types";
 import { checkPosTopRight, checkPosBottomRight, checkPosBottomLeft, checkPosTopLeft } from "./utilis";
+import { NETWORK } from "../config.constants";
+
+export const activation = (currentMovement: CurrentMovement, mapSettings: MapSettings): Array<number> => {
+    switch (NETWORK.ENCODE_METHOD) {
+        case 'detailed':
+            return encodeNetworkInputs(currentMovement, mapSettings);
+        case 'superficial':
+            return encodeNetworkInputs2(currentMovement, mapSettings);
+        default:
+            return encodeNetworkInputs2(currentMovement, mapSettings);
+    }
+}
 
 export const encodeNetworkInputs = (currentMovement: CurrentMovement, mapSettings: MapSettings): Array<number> => {
     const snake: Position = { x: currentMovement.snakePos[0].x, y: currentMovement.snakePos[0].y };
@@ -64,4 +76,20 @@ export const encodeNetworkInputs = (currentMovement: CurrentMovement, mapSetting
             break;
     }
     return [...distanceToWalls, ...isThereApple, ...isPartOfSnake, ...headDirection, ...tailDirection];
+}
+
+export const encodeNetworkInputs2 = (currentMovement: CurrentMovement, mapSettings: MapSettings): Array<number> => {
+    const snake: Position = { x: currentMovement.snakePos[0].x, y: currentMovement.snakePos[0].y };
+    const apple: Position = { x: currentMovement.applePos.x, y: currentMovement.applePos.y };
+    const size: MapSettings = mapSettings;
+    const config = [];
+    config.push(snake.x === 0 ? 1 : -1);
+    config.push(snake.y === 0 ? 1 : -1);
+    config.push(size.width - snake.x == 1 ? 1 : -1);
+    config.push(size.height - snake.y == 1 ? 1 : -1);
+    config.push(snake.x < apple.x ? 1 : -1);
+    config.push(snake.y < apple.y ? 1 : -1);
+    config.push(snake.x > apple.x ? 1 : -1);
+    config.push(snake.y > apple.y ? 1 : -1);
+    return config;
 }
