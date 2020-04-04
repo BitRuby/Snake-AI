@@ -44,14 +44,16 @@ export default class Population {
     }
 
     selection = () => {
-        this.population = selection(copy(this.population));
+        this.population = selection(this.population);
     }
 
     crossover = () => {
         for (let i = 0; i < this.population.length; i += 2) {
-            const offspring = crossover(this.population[i].getChromosome(), this.population[(i + 1) % this.population.length].getChromosome());
-            this.population[i].setChromosome(offspring[0]);
-            this.population[(i + 1) % this.population.length].setChromosome(offspring[1]);
+            if (Math.random() < ALGORITHM.CROSSOVER_PROPABILITY) {
+                const offspring = crossover(this.population[i].getChromosome(), this.population[(i + 1) % this.population.length].getChromosome());
+                this.population[i].setChromosome(offspring[0]);
+                this.population[(i + 1) % this.population.length].setChromosome(offspring[1]);
+            }
         }
     }
 

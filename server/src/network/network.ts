@@ -6,6 +6,7 @@ import { sigmoid, indexOfMax, copy, randomSeed, relu } from "../utilis";
 import { NETWORK, ALGORITHM } from "../config.constants";
 import { multiply } from 'mathjs';
 import { encodeNetworkInputs } from "./encoding";
+import { activation } from "./activation";
 
 export default class Network {
     private dead: boolean;
@@ -38,7 +39,8 @@ export default class Network {
         for (let i = 1; i < this.NN.length; i++) {
             layers[i] = [];
             for (let j = 0; j < this.NN[i]; j++) {
-                layers[i].push(relu(multiply(layers[i - 1], weights.slice(acc, acc + this.NN[i - 1]))));
+                if (i === this.NN.length - 1) layers[i].push(activation(multiply(layers[i - 1], weights.slice(acc, acc + this.NN[i - 1])), true));
+                else layers[i].push(activation(multiply(layers[i - 1], weights.slice(acc, acc + this.NN[i - 1])), false));
                 acc += this.NN[i - 1];
             }
         }

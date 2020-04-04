@@ -8,11 +8,15 @@ export const relu = (t: any) => {
   return Math.log(1 + Math.pow(Math.E, t));
 }
 
-const random_seed = [0.321, 0.655, 0.23, 0.976, 0.003, 0.142, 0.769, 0.865];
+export const randomSeed = (seed: number) => {
+  var x = Math.sin(seed) * 10000;
+  return x - Math.floor(x);
+}
 
-export const randomSeed = (number: number) => {
-  return Number(((number * random_seed[number % 7]) % 1).toPrecision(4));
+export const randomInt = (min: number = 0, max: number = 1): number => {
+  return Math.floor(Math.random() * (max - min) + min);
 };
+
 
 export const normalize = (T: number, Tmin: number, Tmax: number) => {
   return Tmax === Tmin ? 1 : (T - Tmin) / (Tmax - Tmin);

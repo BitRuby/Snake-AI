@@ -1,7 +1,7 @@
 type SELECTION_TYPES = 'tournament' | 'roulette';
-type CROSSOVER_TYPES = 'uniform_binary' | 'one_point';
-type MUTATION_TYPES = 'uniform_mutation';
-type ACTIVATION_FUNCTION_TYPES = 'sigmoid' | "relu";
+type CROSSOVER_TYPES = 'uniform_binary' | 'one_point' | 'two_point' | 'half_uniform_binary' | 'combine';
+type MUTATION_TYPES = 'uniform_mutation' | 'swap_mutation' | 'flip_mutation';
+type ACTIVATION_FUNCTION_TYPES = 'sigmoid' | 'relu' | 'combine';
 
 interface IAlgorithm {
   GENERATIONS: number,
@@ -28,17 +28,17 @@ export const ALGORITHM: IAlgorithm = {
   POPULATION_SIZE: 500,
   SELECTION_TYPE: "tournament",
   TOURNAMENT_SIZE: 50,
-  CROSSOVER_TYPE: "uniform_binary",
-  CROSSOVER_PROPABILITY: 0.65,
-  MUTATION_TYPE: "uniform_mutation",
-  MUTATION_UNIFORM_PROPABILITY: 0.1,
-  MUTATION_UNIFORM_LOWER_BOUNDS: 0,
-  MUTATION_UNIFORM_UPPER_BOUNDS: 1
+  CROSSOVER_TYPE: "combine",
+  CROSSOVER_PROPABILITY: 0.5,
+  MUTATION_TYPE: "flip_mutation",
+  MUTATION_UNIFORM_PROPABILITY: 0.05,
+  MUTATION_UNIFORM_LOWER_BOUNDS: 0.2,
+  MUTATION_UNIFORM_UPPER_BOUNDS: 0.6
 };
 
 export const NETWORK: INetwork = {
-  RANDOM_WEIGHTS_LOWER_BOUNDS: -5,
-  RANDOM_WEIGHTS_UPPER_BOUNDS: 5,
-  ACTIVATION_FUNCTION: "sigmoid",
-  NN_ARCHITECTURE: [32, 20, 12, 4]
+  RANDOM_WEIGHTS_LOWER_BOUNDS: -1,
+  RANDOM_WEIGHTS_UPPER_BOUNDS: 1,
+  ACTIVATION_FUNCTION: "combine",
+  NN_ARCHITECTURE: [32, 20, 8, 4]
 };

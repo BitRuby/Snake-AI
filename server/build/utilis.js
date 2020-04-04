@@ -6,9 +6,14 @@ exports.sigmoid = function (t) {
 exports.relu = function (t) {
     return Math.log(1 + Math.pow(Math.E, t));
 };
-var random_seed = [0.321, 0.655, 0.23, 0.976, 0.003, 0.142, 0.769, 0.865];
-exports.randomSeed = function (number) {
-    return Number(((number * random_seed[number % 7]) % 1).toPrecision(4));
+exports.randomSeed = function (seed) {
+    var x = Math.sin(seed) * 10000;
+    return x - Math.floor(x);
+};
+exports.randomInt = function (min, max) {
+    if (min === void 0) { min = 0; }
+    if (max === void 0) { max = 1; }
+    return Math.floor(Math.random() * (max - min) + min);
 };
 exports.normalize = function (T, Tmin, Tmax) {
     return Tmax === Tmin ? 1 : (T - Tmin) / (Tmax - Tmin);

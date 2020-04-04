@@ -6,6 +6,7 @@ var utilis_2 = require("../utilis");
 var config_constants_1 = require("../config.constants");
 var mathjs_1 = require("mathjs");
 var encoding_1 = require("./encoding");
+var activation_1 = require("./activation");
 var Network = /** @class */ (function () {
     function Network(mapSettings) {
         var _this = this;
@@ -25,7 +26,10 @@ var Network = /** @class */ (function () {
             for (var i = 1; i < _this.NN.length; i++) {
                 layers[i] = [];
                 for (var j = 0; j < _this.NN[i]; j++) {
-                    layers[i].push(utilis_2.relu(mathjs_1.multiply(layers[i - 1], weights.slice(acc, acc + _this.NN[i - 1]))));
+                    if (i === _this.NN.length - 1)
+                        layers[i].push(activation_1.activation(mathjs_1.multiply(layers[i - 1], weights.slice(acc, acc + _this.NN[i - 1])), true));
+                    else
+                        layers[i].push(activation_1.activation(mathjs_1.multiply(layers[i - 1], weights.slice(acc, acc + _this.NN[i - 1])), false));
                     acc += _this.NN[i - 1];
                 }
             }

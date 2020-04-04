@@ -1,6 +1,6 @@
 // import WebSocket from "ws";
 
-import { testNetwork } from "./test";
+import { testNetwork, testSelection } from "./test";
 import Network from "./network/network";
 
 

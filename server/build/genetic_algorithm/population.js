@@ -37,13 +37,15 @@ var Population = /** @class */ (function () {
             _this.mutation();
         };
         this.selection = function () {
-            _this.population = selection_1.selection(utilis_1.copy(_this.population));
+            _this.population = selection_1.selection(_this.population);
         };
         this.crossover = function () {
             for (var i = 0; i < _this.population.length; i += 2) {
-                var offspring = crossover_1.crossover(_this.population[i].getChromosome(), _this.population[(i + 1) % _this.population.length].getChromosome());
-                _this.population[i].setChromosome(offspring[0]);
-                _this.population[(i + 1) % _this.population.length].setChromosome(offspring[1]);
+                if (Math.random() < config_constants_1.ALGORITHM.CROSSOVER_PROPABILITY) {
+                    var offspring = crossover_1.crossover(_this.population[i].getChromosome(), _this.population[(i + 1) % _this.population.length].getChromosome());
+                    _this.population[i].setChromosome(offspring[0]);
+                    _this.population[(i + 1) % _this.population.length].setChromosome(offspring[1]);
+                }
             }
         };
         this.mutation = function () {
