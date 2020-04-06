@@ -3,5 +3,6 @@
   "gameSpeed": 100,
   "backgroundColor": "#636e72",
   "snakeColor": "#fff",
-  "borderColor": "#2d3436"
+  "borderColor": "#2d3436",
+  "webServiceUrl": "ws://localhost:9090"
 }

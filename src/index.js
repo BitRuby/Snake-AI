@@ -1,8 +1,8 @@
-import Game from "./game/game";
+import { WebService } from "./webService";
 
 const main = () => {
-  const c = document.getElementById("canvas");
-  new Game(c).start();
+  const ws = new WebService();
 };
 
 main();
+

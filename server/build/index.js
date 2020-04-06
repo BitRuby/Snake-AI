@@ -1,8 +1,6 @@
 "use strict";
-// import WebSocket from "ws";
 exports.__esModule = true;
-var network_1 = require("./network/network");
-// const ws = new WebSocket.Server({ port: 8080 });
+var WebService_1 = require("./WebService");
 // console.log(ws);
 //Receive width/height 10x10
 // const pop = new Population(4);
@@ -13,5 +11,6 @@ var network_1 = require("./network/network");
 //     pop.printChromosomes();
 //     console.log("haha");
 // }
-var net = new network_1["default"]({ width: 10, height: 10 });
-net.train();
+// const net = new Network({ width: 10, height: 10 });
+// net.train();
+var ws = new WebService_1.WebService();

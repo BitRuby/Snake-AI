@@ -1,6 +1,6 @@
 import Population from "./genetic_algorithm/population";
 import { CurrentMovement, MapSettings } from "./types";
-import { encodeNetworkInputs } from "./network/encoding";
+import { encoding } from "./network/encoding";
 import { multiply } from "mathjs";
 import { indexOfMax } from "./utilis";
 
@@ -90,7 +90,7 @@ export const testEncoding = () => {
         width: 10,
         height: 10
     }
-    const encoded = encodeNetworkInputs(movement, mapS);
+    const encoded = encoding(movement, mapS);
     console.log(encoded);
 }
 
@@ -107,7 +107,7 @@ export const testEncoding2 = () => {
         width: 10,
         height: 10
     }
-    const encoded = encodeNetworkInputs(movement, mapS);
+    const encoded = encoding(movement, mapS);
     console.log(encoded);
 }
 

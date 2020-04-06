@@ -2,7 +2,7 @@ import { CurrentMovement, MapSettings, Position, Binary } from "../types";
 import { checkPosTopRight, checkPosBottomRight, checkPosBottomLeft, checkPosTopLeft } from "./utilis";
 import { NETWORK } from "../config.constants";
 
-export const activation = (currentMovement: CurrentMovement, mapSettings: MapSettings): Array<number> => {
+export const encoding = (currentMovement: CurrentMovement, mapSettings: MapSettings): Array<number> => {
     switch (NETWORK.ENCODE_METHOD) {
         case 'detailed':
             return encodeNetworkInputs(currentMovement, mapSettings);
@@ -13,7 +13,7 @@ export const activation = (currentMovement: CurrentMovement, mapSettings: MapSet
     }
 }
 
-export const encodeNetworkInputs = (currentMovement: CurrentMovement, mapSettings: MapSettings): Array<number> => {
+const encodeNetworkInputs = (currentMovement: CurrentMovement, mapSettings: MapSettings): Array<number> => {
     const snake: Position = { x: currentMovement.snakePos[0].x, y: currentMovement.snakePos[0].y };
     const apple: Position = { x: currentMovement.applePos.x, y: currentMovement.applePos.y };
     const snakePos: Array<Position> = currentMovement.snakePos;
@@ -78,7 +78,7 @@ export const encodeNetworkInputs = (currentMovement: CurrentMovement, mapSetting
     return [...distanceToWalls, ...isThereApple, ...isPartOfSnake, ...headDirection, ...tailDirection];
 }
 
-export const encodeNetworkInputs2 = (currentMovement: CurrentMovement, mapSettings: MapSettings): Array<number> => {
+const encodeNetworkInputs2 = (currentMovement: CurrentMovement, mapSettings: MapSettings): Array<number> => {
     const snake: Position = { x: currentMovement.snakePos[0].x, y: currentMovement.snakePos[0].y };
     const apple: Position = { x: currentMovement.applePos.x, y: currentMovement.applePos.y };
     const size: MapSettings = mapSettings;

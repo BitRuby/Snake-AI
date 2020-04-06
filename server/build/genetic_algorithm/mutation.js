@@ -14,7 +14,7 @@ exports.mutation = function (chromosome) {
     }
 };
 var uniform_mutation = function (chromosome) {
-    if (Math.random() < config_constants_1.ALGORITHM.MUTATION_UNIFORM_PROPABILITY) {
+    if (Math.random() < config_constants_1.ALGORITHM.MUTATION_PROPABILITY) {
         var lower = config_constants_1.ALGORITHM.MUTATION_UNIFORM_LOWER_BOUNDS;
         var upper = config_constants_1.ALGORITHM.MUTATION_UNIFORM_UPPER_BOUNDS;
         var min = Math.floor(lower * (chromosome.length - 1));
@@ -27,7 +27,7 @@ var uniform_mutation = function (chromosome) {
 };
 var swap_mutation = function (chromosome) {
     for (var i = 0; i < chromosome.length; i++) {
-        if (Math.random() < config_constants_1.ALGORITHM.MUTATION_UNIFORM_PROPABILITY) {
+        if (Math.random() < config_constants_1.ALGORITHM.MUTATION_PROPABILITY) {
             var j = Math.floor(Math.random() * chromosome.length);
             var temp = chromosome[i];
             chromosome[i] = chromosome[j];
@@ -40,7 +40,7 @@ var flip_mutation = function (chromosome) {
     var low = config_constants_1.NETWORK.RANDOM_WEIGHTS_LOWER_BOUNDS;
     var high = config_constants_1.NETWORK.RANDOM_WEIGHTS_UPPER_BOUNDS;
     for (var i = 0; i < chromosome.length; i++) {
-        if (Math.random() < config_constants_1.ALGORITHM.MUTATION_UNIFORM_PROPABILITY) {
+        if (Math.random() < config_constants_1.ALGORITHM.MUTATION_PROPABILITY) {
             chromosome[i] = Math.random() * (high - low) + low;
         }
     }

@@ -1,34 +1,10 @@
-type SELECTION_TYPES = 'tournament' | 'roulette';
-type CROSSOVER_TYPES = 'uniform_binary' | 'one_point' | 'two_point' | 'half_uniform_binary' | 'combine';
-type MUTATION_TYPES = 'uniform_mutation' | 'swap_mutation' | 'flip_mutation';
-type ACTIVATION_FUNCTION_TYPES = 'sigmoid' | 'relu' | 'combine';
-type ENCODE_METHOD_TYPES = 'detailed' | 'superficial';
+import { IAlgorithm, INetwork, IServer, ISize } from "./types";
 
-interface IAlgorithm {
-  GENERATIONS: number,
-  POPULATION_SIZE: number,
-  SELECTION_TYPE: SELECTION_TYPES,
-  TOURNAMENT_SIZE: number,
-  CROSSOVER_TYPE: CROSSOVER_TYPES,
-  CROSSOVER_PROPABILITY: number,
-  MUTATION_TYPE: MUTATION_TYPES,
-  MUTATION_PROPABILITY: number,
-  MUTATION_UNIFORM_LOWER_BOUNDS: number,
-  MUTATION_UNIFORM_UPPER_BOUNDS: number
-}
-
-interface INetwork {
-  RANDOM_WEIGHTS_LOWER_BOUNDS: number,
-  RANDOM_WEIGHTS_UPPER_BOUNDS: number,
-  ACTIVATION_FUNCTION: ACTIVATION_FUNCTION_TYPES,
-  NN_ARCHITECTURE: Array<number>,
-  ENCODE_METHOD: ENCODE_METHOD_TYPES
-}
 
 export const ALGORITHM: IAlgorithm = {
   GENERATIONS: 1000,
   POPULATION_SIZE: 500,
-  SELECTION_TYPE: "tournament",
+  SELECTION_TYPE: "roulette",
   TOURNAMENT_SIZE: 50,
   CROSSOVER_TYPE: "combine",
   CROSSOVER_PROPABILITY: 0.5,
@@ -45,3 +21,12 @@ export const NETWORK: INetwork = {
   NN_ARCHITECTURE: [8, 32, 32, 4],
   ENCODE_METHOD: 'superficial'
 };
+
+export const SERVER: IServer = {
+  PORT: 9090
+}
+
+export const SIZE: ISize = {
+  HEIGHT: 10,
+  WIDTH: 10
+}

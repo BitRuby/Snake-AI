@@ -12,6 +12,8 @@ var Network = /** @class */ (function () {
         var _this = this;
         this.NN = config_constants_1.NETWORK.NN_ARCHITECTURE;
         this.randomSeedNumber = 0;
+        this.dataPacket = [];
+        this.generation = 0;
         this.calculateChromosomeLength = function (NN) {
             var cc = 0;
             for (var i = 0; i < NN.length - 1; i++) {
@@ -198,7 +200,17 @@ var Network = /** @class */ (function () {
                 _this.updateSnakePosition(weights);
             }
         };
-        this.sendMovementRegisterToClient = function () {
+        this.saveMovementRegister = function (movementRegister) {
+            _this.dataPacket.push(movementRegister);
+        };
+        this.findBestAndSendToClient = function () {
+            var best = _this.dataPacket[0];
+            _this.dataPacket.forEach(function (e) {
+                if (best.motion[best.motion.length - 1].points < e.motion[e.motion.length - 1].points) {
+                    best = e;
+                }
+            });
+            console.table(best.motion);
         };
         this.clear = function () {
             _this.dead = false;
@@ -216,9 +228,12 @@ var Network = /** @class */ (function () {
                     _this.makeAMove(weights);
                     individual.setFitness(_this.calculateFitness());
                     individual.setPoints(_this.currentMovement.points);
-                    _this.sendMovementRegisterToClient();
+                    _this.saveMovementRegister(_this.movementRegister);
                     _this.clear();
                 });
+                _this.generation++;
+                _this.findBestAndSendToClient();
+                _this.dataPacket = [];
                 console.log(_this.population.findBestNetwork().getFitness());
                 console.log(_this.population.findBestNetwork().getPoints());
                 _this.population.geneticOperators();

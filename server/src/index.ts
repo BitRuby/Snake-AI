@@ -1,26 +1,4 @@
-// import WebSocket from "ws";
-
-import { testNetwork, testSelection } from "./test";
-import Network from "./network/network";
-
-
-// const ws = new WebSocket.Server({ port: 8080 });
-
-// console.log(ws);
-
-//Receive width/height 10x10
-
-
-// const pop = new Population(4);
-// for (var i = 0; i < 10; i++) {
-//     pop.printChromosomes();
-//     pop.geneticOperators();
-//     console.log("////////////////");
-//     pop.printChromosomes();
-//     console.log("haha");
-// }
-
-const net = new Network({ width: 10, height: 10 });
-net.train();
+import { WebService } from "./WebService";
+const ws = new WebService();
 
 

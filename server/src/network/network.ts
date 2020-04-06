@@ -5,7 +5,7 @@ import { isCollideWithBody, isCollideWithWalls, isCollideWithApple, calculateTai
 import { sigmoid, indexOfMax, copy, randomSeed, relu } from "../utilis";
 import { NETWORK, ALGORITHM } from "../config.constants";
 import { multiply } from 'mathjs';
-import { encodeNetworkInputs, encodeNetworkInputs2 } from "./encoding";
+import { encoding } from "./encoding";
 import { activation } from "./activation";
 
 export default class Network {
@@ -16,6 +16,8 @@ export default class Network {
     private mapSettings: MapSettings;
     private NN: Array<number> = NETWORK.NN_ARCHITECTURE;
     private randomSeedNumber: number = 0;
+    private dataPacket: Array<MovementRegister> = [];
+    private generation: number = 0;
     constructor(mapSettings: MapSettings) {
         this.population = new Population(this.calculateChromosomeLength(this.NN));
         this.dead = false;
@@ -34,7 +36,7 @@ export default class Network {
 
     private calculateNetwork = (weights: Array<number>): Array<number> => {
         let layers = new Array<Array<number>>();
-        layers[0] = encodeNetworkInputs2(this.currentMovement, this.mapSettings);
+        layers[0] = encoding(this.currentMovement, this.mapSettings);
         let acc = 0;
         for (let i = 1; i < this.NN.length; i++) {
             layers[i] = [];
@@ -208,8 +210,18 @@ export default class Network {
         }
     }
 
-    private sendMovementRegisterToClient = () => {
+    private saveMovementRegister = (movementRegister: MovementRegister) => {
+        this.dataPacket.push(movementRegister);
+    }
 
+    private findBestAndSendToClient = () => {
+        let best: MovementRegister = this.dataPacket[0];
+        this.dataPacket.forEach(e => {
+            if (best.motion[best.motion.length - 1].points < e.motion[e.motion.length - 1].points) {
+                best = e;
+            }
+        });
+        return best.motion;
     }
 
     private clear = () => {
@@ -230,13 +242,30 @@ export default class Network {
                 this.makeAMove(weights);
                 individual.setFitness(this.calculateFitness());
                 individual.setPoints(this.currentMovement.points);
-                this.sendMovementRegisterToClient();
+                this.saveMovementRegister(this.movementRegister);
                 this.clear();
             });
+            this.generation++;
+            this.findBestAndSendToClient();
+            this.dataPacket = [];
             console.log(this.population.findBestNetwork().getFitness());
             console.log(this.population.findBestNetwork().getPoints());
             this.population.geneticOperators();
         }
+    }
+
+    train_single = () => {
+        this.population.getPopulation().forEach((individual: Individual) => {
+            const weights = individual.getChromosome();
+            this.makeAMove(weights);
+            individual.setFitness(this.calculateFitness());
+            individual.setPoints(this.currentMovement.points);
+            this.saveMovementRegister(this.movementRegister);
+            this.clear();
+        });
+        this.generation++;
+        this.population.geneticOperators();
+        return this.findBestAndSendToClient();
     }
 
     test = () => {
