@@ -22,3 +22,7 @@ exports.NETWORK = {
 exports.SERVER = {
     PORT: 9090
 };
+exports.SIZE = {
+    HEIGHT: 10,
+    WIDTH: 10
+};

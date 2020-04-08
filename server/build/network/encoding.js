@@ -9,17 +9,17 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
 exports.__esModule = true;
 var utilis_1 = require("./utilis");
 var config_constants_1 = require("../config.constants");
-exports.activation = function (currentMovement, mapSettings) {
+exports.encoding = function (currentMovement, mapSettings) {
     switch (config_constants_1.NETWORK.ENCODE_METHOD) {
         case 'detailed':
-            return exports.encodeNetworkInputs(currentMovement, mapSettings);
+            return encodeNetworkInputs(currentMovement, mapSettings);
         case 'superficial':
-            return exports.encodeNetworkInputs2(currentMovement, mapSettings);
+            return encodeNetworkInputs2(currentMovement, mapSettings);
         default:
-            return exports.encodeNetworkInputs2(currentMovement, mapSettings);
+            return encodeNetworkInputs2(currentMovement, mapSettings);
     }
 };
-exports.encodeNetworkInputs = function (currentMovement, mapSettings) {
+var encodeNetworkInputs = function (currentMovement, mapSettings) {
     var snake = { x: currentMovement.snakePos[0].x, y: currentMovement.snakePos[0].y };
     var apple = { x: currentMovement.applePos.x, y: currentMovement.applePos.y };
     var snakePos = currentMovement.snakePos;
@@ -83,7 +83,7 @@ exports.encodeNetworkInputs = function (currentMovement, mapSettings) {
     }
     return __spreadArrays(distanceToWalls, isThereApple, isPartOfSnake, headDirection, tailDirection);
 };
-exports.encodeNetworkInputs2 = function (currentMovement, mapSettings) {
+var encodeNetworkInputs2 = function (currentMovement, mapSettings) {
     var snake = { x: currentMovement.snakePos[0].x, y: currentMovement.snakePos[0].y };
     var apple = { x: currentMovement.applePos.x, y: currentMovement.applePos.y };
     var size = mapSettings;

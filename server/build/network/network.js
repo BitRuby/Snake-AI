@@ -23,7 +23,7 @@ var Network = /** @class */ (function () {
         };
         this.calculateNetwork = function (weights) {
             var layers = new Array();
-            layers[0] = encoding_1.encodeNetworkInputs2(_this.currentMovement, _this.mapSettings);
+            layers[0] = encoding_1.encoding(_this.currentMovement, _this.mapSettings);
             var acc = 0;
             for (var i = 1; i < _this.NN.length; i++) {
                 layers[i] = [];
@@ -210,7 +210,7 @@ var Network = /** @class */ (function () {
                     best = e;
                 }
             });
-            console.table(best.motion);
+            return best.motion;
         };
         this.clear = function () {
             _this.dead = false;
@@ -238,6 +238,19 @@ var Network = /** @class */ (function () {
                 console.log(_this.population.findBestNetwork().getPoints());
                 _this.population.geneticOperators();
             }
+        };
+        this.train_single = function () {
+            _this.population.getPopulation().forEach(function (individual) {
+                var weights = individual.getChromosome();
+                _this.makeAMove(weights);
+                individual.setFitness(_this.calculateFitness());
+                individual.setPoints(_this.currentMovement.points);
+                _this.saveMovementRegister(_this.movementRegister);
+                _this.clear();
+            });
+            _this.generation++;
+            _this.population.geneticOperators();
+            return _this.findBestAndSendToClient();
         };
         this.test = function () {
             throw new Error("Method not implemented");

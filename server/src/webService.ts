@@ -13,6 +13,7 @@ interface Message {
 export class WebService {
     private ws: WebSocket.Server;
     net!: Network;
+    isBusy: boolean = false;
     private generations: number = 0;
     constructor() {
         this.ws = new WebSocket.Server({ port: SERVER.PORT });
@@ -22,13 +23,16 @@ export class WebService {
                 let msg: Message = JSON.parse(m);
                 switch (msg.type) {
                     case 1:
-                        console.log("Client connected!");
-                        const ms: MapSettings = { width: SIZE.WIDTH, height: SIZE.HEIGHT };
-                        this.net = new Network(ms);
-                        w.send(JSON.stringify({ type: 1, data: ms }));
+                        if (!this.isBusy) {
+                            console.log("Client connected!");
+                            this.isBusy = true;
+                            const ms: MapSettings = { width: SIZE.WIDTH, height: SIZE.HEIGHT };
+                            this.net = new Network(ms);
+                            w.send(JSON.stringify({ type: 1, data: ms }));
+                        }
                         break;
                     case 2:
-                        w.send(JSON.stringify({ type: 2, data: this.net.train_single() }));
+                        w.send(JSON.stringify({ type: 2, data: { snake: this.net.train_single(), generations: this.generations } }));
                         this.generations++;
                         if (this.generations === ALGORITHM.GENERATIONS) this.ws.close();
                         break;
@@ -36,6 +40,9 @@ export class WebService {
             });
             w.on('close', m => {
                 this.net = {} as Network;
+                this.generations = 0;
+                this.isBusy = false;
+                console.log('Client disconnected!');
                 return;
             });
         })
