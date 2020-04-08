@@ -255,6 +255,7 @@ export default class Network {
     }
 
     train_single = () => {
+        this.dataPacket = [];
         this.population.getPopulation().forEach((individual: Individual) => {
             const weights = individual.getChromosome();
             this.makeAMove(weights);
