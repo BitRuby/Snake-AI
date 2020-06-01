@@ -240,6 +240,7 @@ var Network = /** @class */ (function () {
             }
         };
         this.train_single = function () {
+            _this.dataPacket = [];
             _this.population.getPopulation().forEach(function (individual) {
                 var weights = individual.getChromosome();
                 _this.makeAMove(weights);

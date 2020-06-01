@@ -1,4 +1,5 @@
 import data from "./config.json";
+import { ExportToCsv } from 'export-to-csv';
 
 class Game {
   constructor(c) {
@@ -11,6 +12,7 @@ class Game {
     this.ctx = c.getContext("2d");
     this.c = c;
     this.interval = {};
+    this.statsArray = [];
   }
   drawSnake = (currentMovement) => {
     this.ctx.fillStyle = "#ffffff";
@@ -49,6 +51,22 @@ class Game {
         this.drawApple(data.snake[i]);
         this.drawStats(data.snake[i], data.generations);
         await this.sleep(this.speed);
+      }
+      this.statsArray.push({score: data.snake[data.snake.length-1].points});
+      if (data.generations === 49) {
+        const options = { 
+          fieldSeparator: ',',
+          quoteStrings: '"',
+          decimalSeparator: '.',
+          showLabels: true, 
+          showTitle: true,
+          title: `Generation_${data.generations}`,
+          useTextFile: false,
+          useBom: true,
+          useKeysAsHeaders: true,
+        };
+        const csvExporter = new ExportToCsv(options);
+        csvExporter.generateCsv(this.statsArray);
       }
       e(true);
     });
