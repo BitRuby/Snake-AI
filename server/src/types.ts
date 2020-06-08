@@ -24,9 +24,9 @@ export interface CurrentMovement {
 
 type SELECTION_TYPES = 'tournament' | 'roulette';
 type CROSSOVER_TYPES = 'uniform_binary' | 'one_point' | 'two_point' | 'half_uniform_binary' | 'combine';
-type MUTATION_TYPES = 'uniform_mutation' | 'swap_mutation' | 'flip_mutation';
+type MUTATION_TYPES = 'flip_mutation';
 type ACTIVATION_FUNCTION_TYPES = 'sigmoid' | 'relu' | 'combine';
-type ENCODE_METHOD_TYPES = 'detailed' | 'superficial';
+type ENCODE_METHOD_TYPES = 'detailed' | 'superficial' | 'combine';
 
 export interface IAlgorithm {
     GENERATIONS: number,
@@ -37,8 +37,6 @@ export interface IAlgorithm {
     CROSSOVER_PROPABILITY: number,
     MUTATION_TYPE: MUTATION_TYPES,
     MUTATION_PROPABILITY: number,
-    MUTATION_UNIFORM_LOWER_BOUNDS: number,
-    MUTATION_UNIFORM_UPPER_BOUNDS: number
 }
 
 export interface INetwork {

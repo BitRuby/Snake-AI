@@ -1,6 +1,6 @@
 {
-  "pixelSize": 60,
-  "gameSpeed": 50,
+  "pixelSize": 15,
+  "gameSpeed": 1,
   "backgroundColor": "#34495e",
   "webServiceUrl": "ws://localhost:9090"
 }

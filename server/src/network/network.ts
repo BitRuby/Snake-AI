@@ -7,6 +7,7 @@ import { NETWORK, ALGORITHM } from "../config.constants";
 import { multiply } from 'mathjs';
 import { encoding } from "./encoding";
 import { activation } from "./activation";
+import { performance } from 'perf_hooks';
 
 export default class Network {
     private dead: boolean;
@@ -18,6 +19,7 @@ export default class Network {
     private randomSeedNumber: number = 0;
     private dataPacket: Array<MovementRegister> = [];
     private generation: number = 0;
+    private time: number = 0;
     constructor(mapSettings: MapSettings) {
         this.population = new Population(this.calculateChromosomeLength(this.NN));
         this.dead = false;
@@ -82,7 +84,7 @@ export default class Network {
                     this.currentMovement.tailDirection = calculateTailDirection(this.currentMovement);
                     if (isCollideWithApple({ x, y: y - 1 }, this.currentMovement)) {
                         this.currentMovement.points += 1;
-                        this.currentMovement.health = 100;
+                        this.currentMovement.health = (this.mapSettings.height * this.mapSettings.width);
                         this.currentMovement.applePos = this.randomApple(false);
                     } else {
                         this.currentMovement.snakePos.splice(-1, 1);
@@ -101,7 +103,7 @@ export default class Network {
                     this.currentMovement.tailDirection = calculateTailDirection(this.currentMovement);
                     if (isCollideWithApple({ x, y: y + 1 }, this.currentMovement)) {
                         this.currentMovement.points += 1;
-                        this.currentMovement.health = 100;
+                        this.currentMovement.health = (this.mapSettings.height * this.mapSettings.width);
                         this.currentMovement.applePos = this.randomApple(false);
                     } else {
                         this.currentMovement.health--;
@@ -120,7 +122,7 @@ export default class Network {
                     this.currentMovement.tailDirection = calculateTailDirection(this.currentMovement);
                     if (isCollideWithApple({ x: x - 1, y }, this.currentMovement)) {
                         this.currentMovement.points += 1;
-                        this.currentMovement.health = 100;
+                        this.currentMovement.health = (this.mapSettings.height * this.mapSettings.width);
                         this.currentMovement.applePos = this.randomApple(false);
                     } else {
                         this.currentMovement.health--;
@@ -139,7 +141,7 @@ export default class Network {
                     this.currentMovement.tailDirection = calculateTailDirection(this.currentMovement);
                     if (isCollideWithApple({ x: x + 1, y }, this.currentMovement)) {
                         this.currentMovement.points += 1;
-                        this.currentMovement.health = 100;
+                        this.currentMovement.health = (this.mapSettings.height * this.mapSettings.width);
                         this.currentMovement.applePos = this.randomApple(false);
                     } else {
                         this.currentMovement.health--;
@@ -190,7 +192,7 @@ export default class Network {
                 points: 0,
                 headDirection: 'right',
                 tailDirection: 'left',
-                health: 100
+                health: (this.mapSettings.height * this.mapSettings.width)
             }]
         }
         this.currentMovement = {
@@ -198,7 +200,7 @@ export default class Network {
             applePos: applePos,
             headDirection: 'right',
             tailDirection: 'left',
-            health: 100,
+            health: (this.mapSettings.height * this.mapSettings.width),
             points: 0
         }
     }
@@ -221,7 +223,7 @@ export default class Network {
                 best = e;
             }
         });
-        return best.motion;
+        return { motion: best.motion, time: this.time };
     }
 
     private clear = () => {
@@ -232,7 +234,7 @@ export default class Network {
     }
 
     private calculateFitness = (): number => {
-        return (100 - this.currentMovement.health) + ((Math.pow(2, this.currentMovement.points) + Math.pow(this.currentMovement.points, 2.1) * 500) - (Math.pow(this.currentMovement.points, 1.2) * (Math.pow(0.25 * (100 - this.currentMovement.health), 1.3))));
+        return ((this.mapSettings.height * this.mapSettings.width) - this.currentMovement.health) + ((Math.pow(2, this.currentMovement.points) + Math.pow(this.currentMovement.points, 2.1) * 500) - (Math.pow(this.currentMovement.points, 1.2) * (Math.pow(0.25 * ((this.mapSettings.height * this.mapSettings.width) - this.currentMovement.health), 1.3))));
     }
 
     train = () => {
@@ -256,6 +258,7 @@ export default class Network {
 
     train_single = () => {
         this.dataPacket = [];
+        var t0 = performance.now()
         this.population.getPopulation().forEach((individual: Individual) => {
             const weights = individual.getChromosome();
             this.makeAMove(weights);
@@ -266,6 +269,8 @@ export default class Network {
         });
         this.generation++;
         this.population.geneticOperators();
+        var t1 = performance.now()
+        this.time = t1 - t0;
         return this.findBestAndSendToClient();
     }
 

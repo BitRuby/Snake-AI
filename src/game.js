@@ -52,7 +52,7 @@ class Game {
         this.drawStats(data.snake[i], data.generations);
         await this.sleep(this.speed);
       }
-      this.statsArray.push({score: data.snake[data.snake.length-1].points});
+      this.statsArray.push({score: data.snake[data.snake.length-1].points, time: data.time});
       if (data.generations === 49) {
         const options = { 
           fieldSeparator: ',',

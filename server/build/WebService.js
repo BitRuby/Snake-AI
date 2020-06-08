@@ -24,7 +24,8 @@ var WebService = /** @class */ (function () {
                         }
                         break;
                     case 2:
-                        w.send(JSON.stringify({ type: 2, data: { snake: _this.net.train_single(), generations: _this.generations } }));
+                        var result = _this.net.train_single();
+                        w.send(JSON.stringify({ type: 2, data: { snake: result.motion, time: result.time, generations: _this.generations } }));
                         _this.generations++;
                         if (_this.generations === config_constants_1.ALGORITHM.GENERATIONS)
                             _this.ws.close();

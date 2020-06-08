@@ -32,7 +32,8 @@ export class WebService {
                         }
                         break;
                     case 2:
-                        w.send(JSON.stringify({ type: 2, data: { snake: this.net.train_single(), generations: this.generations } }));
+                        const result = this.net.train_single();
+                        w.send(JSON.stringify({ type: 2, data: { snake: result.motion, time: result.time, generations: this.generations } }));
                         this.generations++;
                         if (this.generations === ALGORITHM.GENERATIONS) this.ws.close();
                         break;

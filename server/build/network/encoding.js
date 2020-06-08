@@ -9,12 +9,15 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
 exports.__esModule = true;
 var utilis_1 = require("./utilis");
 var config_constants_1 = require("../config.constants");
+var utilis_2 = require("../utilis");
 exports.encoding = function (currentMovement, mapSettings) {
     switch (config_constants_1.NETWORK.ENCODE_METHOD) {
         case 'detailed':
             return encodeNetworkInputs(currentMovement, mapSettings);
         case 'superficial':
             return encodeNetworkInputs2(currentMovement, mapSettings);
+        case 'combine':
+            return encodeNetworkInputs3(currentMovement, mapSettings);
         default:
             return encodeNetworkInputs2(currentMovement, mapSettings);
     }
@@ -88,10 +91,49 @@ var encodeNetworkInputs2 = function (currentMovement, mapSettings) {
     var apple = { x: currentMovement.applePos.x, y: currentMovement.applePos.y };
     var size = mapSettings;
     var config = [];
-    config.push(snake.x === 0 ? 1 : -1);
-    config.push(snake.y === 0 ? 1 : -1);
-    config.push(size.width - snake.x == 1 ? 1 : -1);
-    config.push(size.height - snake.y == 1 ? 1 : -1);
+    config.push(utilis_2.normalize(snake.x, 0, size.width));
+    config.push(utilis_2.normalize(snake.y, 0, size.height));
+    config.push(utilis_2.normalize((size.width - 1) - snake.x, 0, size.width));
+    config.push(utilis_2.normalize((size.height - 1) - snake.y, 0, size.height));
+    config.push(snake.x < apple.x ? 1 : -1);
+    config.push(snake.y < apple.y ? 1 : -1);
+    config.push(snake.x > apple.x ? 1 : -1);
+    config.push(snake.y > apple.y ? 1 : -1);
+    return config;
+};
+var encodeNetworkInputs3 = function (currentMovement, mapSettings) {
+    var snake = { x: currentMovement.snakePos[0].x, y: currentMovement.snakePos[0].y };
+    var apple = { x: currentMovement.applePos.x, y: currentMovement.applePos.y };
+    var size = mapSettings;
+    var config = [];
+    var leftTail = currentMovement.snakePos.filter(function (e) { return e.y === snake.y && e.x < snake.x; });
+    if (leftTail.length > 0) {
+        config.push(snake.x === leftTail[0].x + 1 ? 1 : -1);
+    }
+    else {
+        config.push(snake.x === 0 ? 1 : -1);
+    }
+    var topTail = currentMovement.snakePos.filter(function (e) { return e.x === snake.x && e.y < snake.y; });
+    if (topTail.length > 0) {
+        config.push(snake.y === topTail[0].y + 1 ? 1 : -1);
+    }
+    else {
+        config.push(snake.y === 0 ? 1 : -1);
+    }
+    var rightTail = currentMovement.snakePos.filter(function (e) { return e.y === snake.y && e.x > snake.x; });
+    if (rightTail.length > 0) {
+        config.push(snake.x === rightTail[0].x - 1 ? 1 : -1);
+    }
+    else {
+        config.push(size.width - snake.x === 1 ? 1 : -1);
+    }
+    var bottomTail = currentMovement.snakePos.filter(function (e) { return e.x === snake.x && e.y > snake.y; });
+    if (bottomTail.length > 0) {
+        config.push(snake.y === bottomTail[0].y - 1 ? 1 : -1);
+    }
+    else {
+        config.push(size.height - snake.y === 1 ? 1 : -1);
+    }
     config.push(snake.x < apple.x ? 1 : -1);
     config.push(snake.y < apple.y ? 1 : -1);
     config.push(snake.x > apple.x ? 1 : -1);
