@@ -86,10 +86,10 @@ const encodeNetworkInputs2 = (currentMovement: CurrentMovement, mapSettings: Map
     const apple: Position = { x: currentMovement.applePos.x, y: currentMovement.applePos.y };
     const size: MapSettings = mapSettings;
     const config = [];
-    config.push(normalize(snake.x, 0, size.width));
-    config.push(normalize(snake.y, 0, size.height));
-    config.push(normalize((size.width - 1) - snake.x, 0, size.width));
-    config.push(normalize((size.height - 1) - snake.y, 0, size.height));
+    config.push(snake.x === 0 ? 1 : -1);
+    config.push(snake.y === 0 ? 1 : -1);
+    config.push(size.width - snake.x === 1 ? 1 : -1);
+    config.push(size.height - snake.y === 1 ? 1 : -1);
     config.push(snake.x < apple.x ? 1 : -1);
     config.push(snake.y < apple.y ? 1 : -1);
     config.push(snake.x > apple.x ? 1 : -1);

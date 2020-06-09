@@ -1,7 +1,7 @@
 "use strict";
 exports.__esModule = true;
 exports.ALGORITHM = {
-    GENERATIONS: 500,
+    GENERATIONS: 50,
     POPULATION_SIZE: 500,
     SELECTION_TYPE: "roulette",
     TOURNAMENT_SIZE: 50,
@@ -14,8 +14,8 @@ exports.NETWORK = {
     RANDOM_WEIGHTS_LOWER_BOUNDS: -1,
     RANDOM_WEIGHTS_UPPER_BOUNDS: 1,
     ACTIVATION_FUNCTION: "combine",
-    NN_ARCHITECTURE: [8, 32, 32, 4],
-    ENCODE_METHOD: 'combine'
+    NN_ARCHITECTURE: [8, 16, 16, 4],
+    ENCODE_METHOD: 'superficial'
 };
 exports.SERVER = {
     PORT: 9090

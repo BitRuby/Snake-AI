@@ -9,7 +9,6 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
 exports.__esModule = true;
 var utilis_1 = require("./utilis");
 var config_constants_1 = require("../config.constants");
-var utilis_2 = require("../utilis");
 exports.encoding = function (currentMovement, mapSettings) {
     switch (config_constants_1.NETWORK.ENCODE_METHOD) {
         case 'detailed':
@@ -91,10 +90,10 @@ var encodeNetworkInputs2 = function (currentMovement, mapSettings) {
     var apple = { x: currentMovement.applePos.x, y: currentMovement.applePos.y };
     var size = mapSettings;
     var config = [];
-    config.push(utilis_2.normalize(snake.x, 0, size.width));
-    config.push(utilis_2.normalize(snake.y, 0, size.height));
-    config.push(utilis_2.normalize((size.width - 1) - snake.x, 0, size.width));
-    config.push(utilis_2.normalize((size.height - 1) - snake.y, 0, size.height));
+    config.push(snake.x === 0 ? 1 : -1);
+    config.push(snake.y === 0 ? 1 : -1);
+    config.push(size.width - snake.x === 1 ? 1 : -1);
+    config.push(size.height - snake.y === 1 ? 1 : -1);
     config.push(snake.x < apple.x ? 1 : -1);
     config.push(snake.y < apple.y ? 1 : -1);
     config.push(snake.x > apple.x ? 1 : -1);

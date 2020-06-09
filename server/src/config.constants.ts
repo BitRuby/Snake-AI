@@ -2,7 +2,7 @@ import { IAlgorithm, INetwork, IServer, ISize } from "./types";
 
 
 export const ALGORITHM: IAlgorithm = {
-  GENERATIONS: 500,
+  GENERATIONS: 50,
   POPULATION_SIZE: 500,
   SELECTION_TYPE: "roulette",
   TOURNAMENT_SIZE: 50,
@@ -16,8 +16,8 @@ export const NETWORK: INetwork = {
   RANDOM_WEIGHTS_LOWER_BOUNDS: -1,
   RANDOM_WEIGHTS_UPPER_BOUNDS: 1,
   ACTIVATION_FUNCTION: "combine",
-  NN_ARCHITECTURE: [8, 32, 32, 4],
-  ENCODE_METHOD: 'combine'
+  NN_ARCHITECTURE: [8, 16, 16, 4],
+  ENCODE_METHOD: 'superficial'
 };
 
 export const SERVER: IServer = {

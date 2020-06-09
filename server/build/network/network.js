@@ -72,7 +72,7 @@ var Network = /** @class */ (function () {
                         _this.currentMovement.tailDirection = utilis_1.calculateTailDirection(_this.currentMovement);
                         if (utilis_1.isCollideWithApple({ x: x, y: y - 1 }, _this.currentMovement)) {
                             _this.currentMovement.points += 1;
-                            _this.currentMovement.health = 800;
+                            _this.currentMovement.health = (_this.mapSettings.height * _this.mapSettings.width);
                             _this.currentMovement.applePos = _this.randomApple(false);
                         }
                         else {
@@ -93,7 +93,7 @@ var Network = /** @class */ (function () {
                         _this.currentMovement.tailDirection = utilis_1.calculateTailDirection(_this.currentMovement);
                         if (utilis_1.isCollideWithApple({ x: x, y: y + 1 }, _this.currentMovement)) {
                             _this.currentMovement.points += 1;
-                            _this.currentMovement.health = 800;
+                            _this.currentMovement.health = (_this.mapSettings.height * _this.mapSettings.width);
                             _this.currentMovement.applePos = _this.randomApple(false);
                         }
                         else {
@@ -114,7 +114,7 @@ var Network = /** @class */ (function () {
                         _this.currentMovement.tailDirection = utilis_1.calculateTailDirection(_this.currentMovement);
                         if (utilis_1.isCollideWithApple({ x: x - 1, y: y }, _this.currentMovement)) {
                             _this.currentMovement.points += 1;
-                            _this.currentMovement.health = 800;
+                            _this.currentMovement.health = (_this.mapSettings.height * _this.mapSettings.width);
                             _this.currentMovement.applePos = _this.randomApple(false);
                         }
                         else {
@@ -135,7 +135,7 @@ var Network = /** @class */ (function () {
                         _this.currentMovement.tailDirection = utilis_1.calculateTailDirection(_this.currentMovement);
                         if (utilis_1.isCollideWithApple({ x: x + 1, y: y }, _this.currentMovement)) {
                             _this.currentMovement.points += 1;
-                            _this.currentMovement.health = 800;
+                            _this.currentMovement.health = (_this.mapSettings.height * _this.mapSettings.width);
                             _this.currentMovement.applePos = _this.randomApple(false);
                         }
                         else {
@@ -184,7 +184,7 @@ var Network = /** @class */ (function () {
                         points: 0,
                         headDirection: 'right',
                         tailDirection: 'left',
-                        health: 800
+                        health: (_this.mapSettings.height * _this.mapSettings.width)
                     }]
             };
             _this.currentMovement = {
@@ -192,7 +192,7 @@ var Network = /** @class */ (function () {
                 applePos: applePos,
                 headDirection: 'right',
                 tailDirection: 'left',
-                health: 800,
+                health: (_this.mapSettings.height * _this.mapSettings.width),
                 points: 0
             };
         };
@@ -221,7 +221,7 @@ var Network = /** @class */ (function () {
             _this.randomSeedNumber = 0;
         };
         this.calculateFitness = function () {
-            return (800 - _this.currentMovement.health) + ((Math.pow(2, _this.currentMovement.points) + Math.pow(_this.currentMovement.points, 2.1) * 500) - (Math.pow(_this.currentMovement.points, 1.2) * (Math.pow(0.25 * (800 - _this.currentMovement.health), 1.3))));
+            return ((_this.mapSettings.height * _this.mapSettings.width) - _this.currentMovement.health) + ((Math.pow(2, _this.currentMovement.points) + Math.pow(_this.currentMovement.points, 2.1) * 500) - (Math.pow(_this.currentMovement.points, 1.2) * (Math.pow(0.25 * ((_this.mapSettings.height * _this.mapSettings.width) - _this.currentMovement.health), 1.3))));
         };
         this.train = function () {
             for (var i = 0; i < config_constants_1.ALGORITHM.GENERATIONS; i++) {
