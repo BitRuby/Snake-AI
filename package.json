@@ -27,7 +27,7 @@
     "@types/ws": "^7.2.3",
     "export-to-csv": "^0.2.1",
     "lodash": "^4.17.15",
-    "mathjs": "^6.6.1",
+    "mathjs": "^7.5.1",
     "typescript": "^3.8.3",
     "ws": "^7.2.3"
   }
